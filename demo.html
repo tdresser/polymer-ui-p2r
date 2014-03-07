@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="bower_components/platform/platform.js"></script>
+
+    <link rel="import" href="polymer-p2r.html">
+  </head>
+  <style>
+    polymer-p2r[unresolved] {
+    opacity: 0;
+    transition: opacity 5s;
+    }
+
+    polymer-p2r {
+    opacity: 1;
+    }
+
+    .row {
+    height: 55px;
+    width: 100%;
+    }
+
+    .even {
+    background-color: lightblue;
+    }
+
+    .odd {
+    background-color: white;
+    }
+
+    polymer-p2r .header-div {
+       background-color: lightgrey;
+       -moz-box-sizing: border-box;
+       box-sizing: border-box;
+       height:100px;
+       text-align:center;
+       padding-top:50px;
+       width: 100%;
+    }
+
+    polymer-p2r .header-div::after {
+      content: 'Pull down to refresh...';
+    }
+
+    polymer-p2r.pulled .header-div::after {
+      content: 'Release to refresh...';
+    }
+
+    polymer-p2r.loading .header-div::after {
+      content: 'Loading...';
+    }
+
+  </style
+  <body>
+    <polymer-p2r unresolved>
+      <div class="p2rheader">
+        <div class="header-div">
+          This should be the header.
+        </div>
+      </div>
+      <div class="content">
+        <div class='row odd'>1</div>
+        <div class='row even'>2</div>
+        <div class='row odd'>3</div>
+        <div class='row even'>4</div>
+        <div class='row odd'>5</div>
+        <div class='row even'>6</div>
+        <div class='row odd'>7</div>
+        <div class='row even'>8</div>
+        <div class='row odd'>9</div>
+        <div class='row even'>10</div>
+        <div class='row odd'>11</div>
+        <div class='row even'>12</div>
+        <div class='row odd'>13</div>
+        <div class='row even'>14</div>
+        <div class='row odd'>15</div>
+        <div class='row even'>16</div>
+        <div class='row odd'>17</div>
+        <div class='row even'>18</div>
+        <div class='row odd'>19</div>
+        <div class='row even'>20</div>
+        <div class='row odd'>21</div>
+        <div class='row even'>22</div>
+        <div class='row odd'>23</div>
+        <div class='row even'>24</div>
+      </div>
+    </polymer-p2r>
+  </body>
+</html>
