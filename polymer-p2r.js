@@ -123,7 +123,7 @@ Polymer('polymer-p2r', {
     }
 
     function isP2rVisible() {
-      return scroller.scrollTop <= loadingOffset;
+      return scroller.scrollTop <= addFriction(loadingOffset);
     }
 
     function finishPull() {
@@ -138,15 +138,10 @@ Polymer('polymer-p2r', {
         setHeaderClassName('');
         startY -= loadingOffset;
         checkPulled();
-      } else if (!isP2rVisible()) {
-        scroller.scrollTop -= overscrollOffset;
-        overscrollOffset = 0;
-        setAnimationEnabled(false);
-        setOffset(0);
-        scheduleUpdate();
-      } else {
+      } else if (isP2rVisible()) {
         setAnimationEnabled(true);
-        setOffset(0);
+        overscrollOffset = scroller.scrollTop;
+        scheduleUpdate();
       }
     }
 
@@ -158,6 +153,9 @@ Polymer('polymer-p2r', {
         lastY = e.touches[0].clientY;
         setAnimationEnabled(false);
         if (!loading) {
+          scroller.scrollTop -= overscrollOffset;
+          overscrollOffset = 0;
+          scheduleUpdate();
           setHeaderClassName('');
         }
       }
