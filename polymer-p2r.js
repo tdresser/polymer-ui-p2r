@@ -214,6 +214,7 @@ Polymer('polymer-p2r', {
     function secondEnd() {
       scrollcontent.removeEventListener('webkitTransitionEnd', secondEnd);
       scrollcontent.style['-webkit-animation'] = '';
+      scroller.addEventListener('scroll', onScrollEvent);
     }
 
     function firstEnd() {
@@ -228,28 +229,40 @@ Polymer('polymer-p2r', {
       scrollcontent.addEventListener('webkitTransitionEnd', secondEnd);
     }
 
-    scroller.addEventListener('scroll', function(e) {
+    function onScrollEvent(e) {
       frame++;
       velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
 
-      var velMult = 30;
-      var vel = -velocityCalculator.getVelocity() * velMult;
-      if (vel < 5 || scroller.scrollTop > 10) {
+      var vel = velocityCalculator.getVelocity();
+      vel = Math.max(-2.5, vel);
+
+      // The higher the velocity, the longer the animation should be. We solve
+      // for the duration of the animation based on the kinematic equations,
+      // using a made up acceleration that feels about right. Note that since
+      // the animation path isn't a parabola, this isn't quite correct.
+      var acceleration = 10;
+      var duration = (-vel + Math.sqrt(vel*vel)) / acceleration;
+      var distance = -vel * (duration/2.0) +
+          0.5 * acceleration * (duration/2.0) * (duration/2.0);
+      distance *= 100;
+
+      if (distance < 10 || scroller.scrollTop > 10) {
         return;
       }
-      vel = Math.min(vel, 80);
 
       if (fingersDown == 0 && !inFlingAnimation) {
         inFlingAnimation = true;
-
-        var val = '-webkit-transform 0.3s ease-out';
+        var val = '-webkit-transform ' + duration + 's ease-out';
         scrollcontent.style.webkitTransition = val;
         p2r.style.webkitTransition = val;
 
+        scroller.removeEventListener('scroll', onScrollEvent);
         scrollcontent.addEventListener('webkitTransitionEnd', firstEnd);
-        translateY(scrollcontent, vel);
-        translateY(p2r, vel - p2r.clientHeight);
+        translateY(scrollcontent, distance);
+        translateY(p2r, distance - p2r.clientHeight);
       }
-    });
+    }
+
+    scroller.addEventListener('scroll', onScrollEvent);
   }
 });
