@@ -46,10 +46,7 @@ Polymer('polymer-p2r', {
     var scrollcontent = self.$.scrollcontent;
     var framePending = false;
     var overscrollOffset = 0;
-    var lastY = 0;
     var startY = 0;
-    var pulling = false;
-    var loading = false;
     var loadingOffset = 125;
     var seenTouchMoveThisSequence = false;
     var fingersDown = 0;
@@ -115,9 +112,6 @@ Polymer('polymer-p2r', {
     }
 
     function setOffset(offset) {
-      if (loading) {
-        offset += loadingOffset;
-      }
       overscrollOffset = addFriction(offset);
       scheduleUpdate();
     }
@@ -126,19 +120,29 @@ Polymer('polymer-p2r', {
       return scroller.scrollTop <= addFriction(loadingOffset);
     }
 
+    function isPulling() {
+      return overscrollOffset > 0;
+    }
+
     function finishPull() {
-      if (!pulling) {
-        setOffset(0);
+      if (!isP2rVisible() || fingersDown != 0)
+        return;
+
+      if (getHeaderClassName() == 'pulled') {
+        setHeaderClassName('loading');
+        setAnimationEnabled(true);
+        setOffset(loadingOffset);
+        setTimeout(finishLoading, 2000);
+      } else if (isPulling()) {
+        setAnimationEnabled(true);
+        overscrollOffset = scroller.scrollTop;
+        scheduleUpdate();
       }
     }
 
     function finishLoading() {
-      loading = false;
-      if (pulling) {
-        setHeaderClassName('');
-        checkPulled();
-      }
-      if (isP2rVisible()) {
+      setHeaderClassName('');
+      if (isP2rVisible() && fingersDown == 0) {
         setAnimationEnabled(true);
         overscrollOffset = scroller.scrollTop;
         scheduleUpdate();
@@ -146,75 +150,71 @@ Polymer('polymer-p2r', {
     }
 
     scroller.addEventListener('touchstart', function(e) {
-      if (inFlingAnimation) {
+/*      if (inFlingAnimation) {
         scrollcontent.removeEventListener('webkitTransitionEnd', firstEnd);
         scrollcontent.addEventListener('webkitTransitionEnd', secondEnd);
         scroller.addEventListener('scroll', onScrollEvent);
       }
-      inFlingAnimation = false;
+      inFlingAnimation = false;*/
       fingersDown++;
       seenTouchMoveThisSequence = false;
-      if (e.touches.length == 1) {
-        lastY = e.touches[0].clientY;
+      console.log("startY offset is " + overscrollOffset);
+      startY = e.touches[0].clientY - overscrollOffset;
+/*      if (e.touches.length == 1) {
+                if (!loading) {
         setAnimationEnabled(false);
-        if (!loading) {
-          scroller.scrollTop -= overscrollOffset;
-          overscrollOffset = 0;
-          scheduleUpdate();
-          setHeaderClassName('');
-        }
+        scroller.scrollTop -= overscrollOffset;
+        overscrollOffset = 0;
+        scheduleUpdate();
+        setHeaderClassName('');
       }
+      }*/
     });
 
     scroller.addEventListener('touchmove', function(e) {
-      if (!pulling &&
+      var startPull = false;
+      if (!isPulling() &&
           scroller.scrollTop === 0 &&
           e.touches.length == 1 &&
-          e.touches[0].clientY > lastY) {
-        startY = e.touches[0].clientY;
-        pulling = true;
+          e.touches[0].clientY > startY) {
+        // First scroll needs to have some delta. // TODO - this is ugly.
+        console.log("startY offset is " + overscrollOffset);
+        startY = e.touches[0].clientY - 1 - overscrollOffset;
+        startPull = true;
       }
 
-      if (pulling) {
-        var offset = e.touches[0].clientY - startY;
-        if (offset >= 0) {
-          setOffset(offset);
-          // Don't preventDefault the first touchMove, it would prevent
-          // scroll from occurring.
-          if (seenTouchMoveThisSequence) {
-            e.preventDefault();
-          }
-        } else {
-          pulling = false;
-          finishPull();
-        }
+      var offset = e.touches[0].clientY - startY;
+
+      if (seenTouchMoveThisSequence && offset > 0) {
+        // Don't preventDefault the first touchMove, it would prevent
+        // scroll from occurring.
+        e.preventDefault();
       }
+
+      if (!isPulling() && !startPull) {
+        return;
+      }
+
+      setAnimationEnabled(false);
+      setOffset(offset);
+
       seenTouchMoveThisSequence = true;
-      lastY = e.touches[0].clientY;
     });
 
     scroller.addEventListener('touchcancel', function(e) {
       fingersDown--;
       finishPull();
     });
+
     scroller.addEventListener('touchend', function(e) {
       fingersDown--;
-      setAnimationEnabled(true);
-      pulling = false;
-      if (getHeaderClassName() == 'pulled') {
-        setHeaderClassName('loading');
-        loading = true;
-        setOffset(0);
-        setTimeout(finishLoading, 2000);
-      } else {
-        finishPull();
-      }
+      finishPull();
     });
 
     var frame = 0;
     var flingAnimationTimeSeconds = 0.2;
 
-    function secondEnd() {
+/*    function secondEnd() {
       scrollcontent.removeEventListener('webkitTransitionEnd', secondEnd);
       scrollcontent.style['-webkit-animation'] = '';
       scroller.addEventListener('scroll', onScrollEvent);
@@ -266,6 +266,6 @@ Polymer('polymer-p2r', {
       }
     }
 
-    scroller.addEventListener('scroll', onScrollEvent);
+    scroller.addEventListener('scroll', onScrollEvent);*/
   }
 });
