@@ -45,9 +45,10 @@ Polymer('polymer-p2r', {
     var p2r = self.$.p2r;
     var scrollcontent = self.$.scrollcontent;
     var framePending = false;
+    var overscrollOffsetAtTouchStart = 0;
     var overscrollOffset = 0;
     var startY = 0;
-    var loadingOffset = 125;
+    var loadingOffset = 50;
     var seenTouchMoveThisSequence = false;
     var fingersDown = 0;
     var inFlingAnimation = false;
@@ -111,13 +112,8 @@ Polymer('polymer-p2r', {
       p2r.style.webkitTransition = val;
     }
 
-    function setOffset(offset) {
-      overscrollOffset = addFriction(offset);
-      scheduleUpdate();
-    }
-
     function isP2rVisible() {
-      return scroller.scrollTop <= addFriction(loadingOffset);
+      return scroller.scrollTop <= loadingOffset;
     }
 
     function isPulling() {
@@ -131,13 +127,13 @@ Polymer('polymer-p2r', {
       if (getHeaderClassName() == 'pulled') {
         setHeaderClassName('loading');
         setAnimationEnabled(true);
-        setOffset(loadingOffset);
+        overscrollOffset = loadingOffset;
         setTimeout(finishLoading, 2000);
       } else if (isPulling()) {
         setAnimationEnabled(true);
         overscrollOffset = scroller.scrollTop;
-        scheduleUpdate();
       }
+      scheduleUpdate();
     }
 
     function finishLoading() {
@@ -156,10 +152,10 @@ Polymer('polymer-p2r', {
         scroller.addEventListener('scroll', onScrollEvent);
       }
       inFlingAnimation = false;*/
+      overscrollOffsetAtTouchStart = overscrollOffset;
       fingersDown++;
       seenTouchMoveThisSequence = false;
-      console.log("startY offset is " + overscrollOffset);
-      startY = e.touches[0].clientY - overscrollOffset;
+      startY = e.touches[0].clientY;
 /*      if (e.touches.length == 1) {
                 if (!loading) {
         setAnimationEnabled(false);
@@ -179,7 +175,7 @@ Polymer('polymer-p2r', {
           e.touches[0].clientY > startY) {
         // First scroll needs to have some delta. // TODO - this is ugly.
         console.log("startY offset is " + overscrollOffset);
-        startY = e.touches[0].clientY - 1 - overscrollOffset;
+        startY = e.touches[0].clientY - 1;
         startPull = true;
       }
 
@@ -196,7 +192,10 @@ Polymer('polymer-p2r', {
       }
 
       setAnimationEnabled(false);
-      setOffset(offset);
+      console.log("offset is " + offset);
+      overscrollOffset = overscrollOffsetAtTouchStart +
+          addFriction(offset);
+      scheduleUpdate();
 
       seenTouchMoveThisSequence = true;
     });
@@ -211,10 +210,11 @@ Polymer('polymer-p2r', {
       finishPull();
     });
 
+/*
     var frame = 0;
     var flingAnimationTimeSeconds = 0.2;
 
-/*    function secondEnd() {
+    function secondEnd() {
       scrollcontent.removeEventListener('webkitTransitionEnd', secondEnd);
       scrollcontent.style['-webkit-animation'] = '';
       scroller.addEventListener('scroll', onScrollEvent);
