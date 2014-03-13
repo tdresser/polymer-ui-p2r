@@ -136,9 +136,9 @@ Polymer('polymer-p2r', {
       loading = false;
       if (pulling) {
         setHeaderClassName('');
-        startY -= loadingOffset;
         checkPulled();
-      } else if (isP2rVisible()) {
+      }
+      if (isP2rVisible()) {
         setAnimationEnabled(true);
         overscrollOffset = scroller.scrollTop;
         scheduleUpdate();
@@ -146,6 +146,11 @@ Polymer('polymer-p2r', {
     }
 
     scroller.addEventListener('touchstart', function(e) {
+      if (inFlingAnimation) {
+        scrollcontent.removeEventListener('webkitTransitionEnd', firstEnd);
+        scrollcontent.addEventListener('webkitTransitionEnd', secondEnd);
+        scroller.addEventListener('scroll', onScrollEvent);
+      }
       inFlingAnimation = false;
       fingersDown++;
       seenTouchMoveThisSequence = false;
