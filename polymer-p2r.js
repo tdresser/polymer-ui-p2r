@@ -6,13 +6,12 @@ function addFriction(delta) {
   if (delta < 0) {
     return delta;
   }
-  var scale = 1;
-  delta /= scale;
 
-  // We want a curve that starts out linear, and slopes down
-  // to slope=0 by maxDelta.
-  var adj = delta - delta*delta/(2*MAX_OFFSET);
-  return adj;
+  delta = delta/MAX_OFFSET;
+  if (delta > 1) {
+    delta = 1;
+  }
+  return MAX_OFFSET * (delta/2 - delta/2 * delta/2);
 }
 
 function Overscroll() {
@@ -57,7 +56,7 @@ Polymer('polymer-p2r', {
     var framePending = false;
     var pullStartY = 0;
     var lastY = 0;
-    var loadingOffset = 50;
+    var loadingOffset = 150;
     var seenTouchMoveThisSequence = false;
     var fingersDown = 0;
     var overscroll = new Overscroll();
@@ -91,8 +90,8 @@ Polymer('polymer-p2r', {
 //        scroller.scrollTop = -offset;
 //        console.log("Set scrollTop to " + -offset);
       }
-      translateY(scrollcontent, overscroll.getOffset());
-      translateY(p2r, overscroll.getOffset() - p2r.clientHeight);
+      translateY(scrollcontent, addFriction(overscroll.getOffset()));
+      translateY(p2r, addFriction(overscroll.getOffset()) - p2r.clientHeight);
       if (!overscroll.reachedTarget()) {
         scheduleUpdate();
       }
