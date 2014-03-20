@@ -1,25 +1,22 @@
-// Try only setting friction on draw, and then reading the offset out of the overscroll object when finding start.
-
-var MAX_OFFSET = 400;
-
-function addFriction(delta) {
-  if (delta < 0) {
-    return delta;
-  }
-
-  delta = delta/MAX_OFFSET;
-  if (delta > 1) {
-    delta = 1;
-  }
-  return MAX_OFFSET * (delta/2 - delta/2 * delta/2);
-}
-
 function Overscroll() {
+  this.MAX_OFFSET = 400;
   var self = this;
   var d = 0;
   var target = 0;
   this.setTarget = function(t) {
     target = t;
+  }
+
+  this.addFriction = function(delta) {
+    if (delta < 0) {
+      return delta;
+    }
+
+    delta = delta/this.MAX_OFFSET;
+    if (delta > 1) {
+      delta = 1;
+    }
+    return this.MAX_OFFSET * (delta/2 - delta/2 * delta/2);
   }
 
   this.reachedTarget = function() {
@@ -37,8 +34,7 @@ function Overscroll() {
   }
 
   this.setOffset = function(o) {
-//    console.log("setOffset " + o);
-    d = Math.max(0, Math.min(o, MAX_OFFSET));
+    d = Math.max(0, Math.min(o, this.MAX_OFFSET));
     target = d;
   }
 
@@ -87,11 +83,9 @@ Polymer('polymer-p2r', {
       var offset = overscroll.getOffset();
       if (offset < 0) {
         offset = 0;
-//        scroller.scrollTop = -offset;
-//        console.log("Set scrollTop to " + -offset);
       }
-      translateY(scrollcontent, addFriction(overscroll.getOffset()));
-      translateY(p2r, addFriction(overscroll.getOffset()) - p2r.clientHeight);
+      translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
+      translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
       if (!overscroll.reachedTarget()) {
         scheduleUpdate();
       }
@@ -110,8 +104,6 @@ Polymer('polymer-p2r', {
     }
 
     function isPulling() {
-//      console.log("overscroll.getOffset is " + overscroll.getOffset());
-//      return overscroll.getOffset() > 0 || overscrollOffset > 0;
       return overscroll.getOffset() > 0.2;
     }
 
