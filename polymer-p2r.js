@@ -34,7 +34,7 @@ function Overscroll() {
   }
 
   this.setOffset = function(o) {
-    d = Math.max(0, Math.min(o, this.MAX_OFFSET));
+    d = Math.min(o, this.MAX_OFFSET);
     target = d;
   }
 
@@ -82,7 +82,10 @@ Polymer('polymer-p2r', {
       overscroll.step();
       var offset = overscroll.getOffset();
       if (offset < 0) {
+        scroller.scrollTop = offset;
+        console.log("NEGATORY " + offset);
         offset = 0;
+        onAnimationFrame();
       }
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
@@ -134,6 +137,7 @@ Polymer('polymer-p2r', {
     }
 
     scroller.addEventListener('touchstart', function(e) {
+      e.preventDefault();
       lastY = e.touches[0].screenY;
       pullStartY = lastY;
       fingersDown++;
@@ -144,7 +148,6 @@ Polymer('polymer-p2r', {
         var offset = e.touches[0].screenY - pullStartY;
         overscroll.setOffset(offset);
         seenTouchMoveThisSequence = true;
-        e.preventDefault();
       }
 
 //      if (e.touches.length == 1 && !isP2rVisible()) {
@@ -163,12 +166,6 @@ Polymer('polymer-p2r', {
 
       var scrollDelta = lastY - e.touches[0].screenY;
       var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
-
-      if (startingNewPull) {
-        // Can't use lastY, it's invalid if you wiggle up and down enough
-        pullStartY = e.touches[0].screenY - 1;
-      }
-
       lastY = e.touches[0].screenY;
 
       var offset = e.touches[0].screenY - pullStartY;
