@@ -118,8 +118,6 @@ Polymer('polymer-p2r', {
         setHeaderClassName('loading');
         setTimeout(finishLoading, 2000);
         overscroll.setTarget(loadingOffset);
-        //overscrollOffset = loadingOffset;
-//        console.log("overscrollOffset = " + loadingOffset);
       } else {
         overscroll.setTarget(Math.max(0, scroller.scrollTop));
       }
@@ -142,14 +140,11 @@ Polymer('polymer-p2r', {
       seenTouchMoveThisSequence = false;
 
       if (isPulling()) {
-        console.log("CONTINUE PULL");
         pullStartY = e.touches[0].screenY - overscroll.getOffset();
-        console.log("pullStartY " + pullStartY);
-        console.log("lastOffsetPreFriction " + lastOffsetPreFriction);
         var offset = e.touches[0].screenY - pullStartY;
         overscroll.setOffset(offset);
-        console.log("SET OFFSET TO " + offset);
         seenTouchMoveThisSequence = true;
+        e.preventDefault();
       }
 
 //      if (e.touches.length == 1 && !isP2rVisible()) {
@@ -170,30 +165,17 @@ Polymer('polymer-p2r', {
       var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
 
       if (startingNewPull) {
-        console.log("STARTING NEW PULL at " + e.touches[0].screenY);
         // Can't use lastY, it's invalid if you wiggle up and down enough
         pullStartY = e.touches[0].screenY - 1;
-      } else if (!seenTouchMoveThisSequence) {
-        return;
       }
 
       lastY = e.touches[0].screenY;
-//      console.log("CUR POSITION IS " + e.touches[0].screenY);
-
-      if (!startingNewPull && !isPulling()) {
-//        console.log("GET OUT");
-//        return;
-      }
 
       var offset = e.touches[0].screenY - pullStartY;
-      console.log("offset is " + offset);
-      lastOffsetPreFriction = offset;
-//      overscroll.setOffset(addFriction(offset));
       overscroll.setOffset(offset);
       scheduleUpdate();
 
       if (seenTouchMoveThisSequence && offset > 0) {
-//        console.log("preventDefault");
         // Don't preventDefault the first touchMove, it would prevent
         // scroll from occurring.
         e.preventDefault();
