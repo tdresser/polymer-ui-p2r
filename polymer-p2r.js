@@ -1,12 +1,9 @@
-// Problem is probably rollOver.
-
 function Overscroll() {
   this.MAX_OFFSET = 400;
   var self = this;
   var d = 0;
   var target = null;
   this.setTarget = function(t) {
-    console.log("Set target ");
     target = t;
   }
 
@@ -29,6 +26,10 @@ function Overscroll() {
   }
 
   this.step = function() {
+    if (d > this.MAX_OFFSET) {
+      d = this.MAX_OFFSET;
+    }
+
     if (target === null) {
       return;
     }
@@ -42,8 +43,9 @@ function Overscroll() {
   }
 
   this.setOffset = function(o) {
-    d = Math.min(o, this.MAX_OFFSET);
     target = null;
+    d = o;
+    this.step();
   }
 
   this.getOffset = function() {
@@ -87,17 +89,20 @@ Polymer('polymer-p2r', {
     function onAnimationFrame() {
       framePending = false;
       checkPulled();
-      var offset = overscroll.getOffset();
-      if (scroller.scrollTop != 0 && offset != 0) {
-        scroller.scrollTop = 0;
-      }
       overscroll.step();
-      if (offset < 0) {
-        scroller.scrollTop = -offset;
-        offset = 0;
+
+      console.log("offset is " + overscroll.getOffset());
+      console.log("scroll top is " + scroller.scrollTop);
+
+      if (overscroll.getOffset() < 0) {
+        console.log("SWITCH OUT");
+        scroller.scrollTop = -overscroll.getOffset();
+        overscroll.setOffset(0);
+      } else if (overscroll.getOffset() > 0 && scroller.scrollTop != 0) {
+        console.log("SWITCH IN");
       }
-      translateY(scrollcontent, overscroll.addFriction(offset));
-      translateY(p2r, overscroll.addFriction(offset) - p2r.clientHeight);
+      translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
+      translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
       if (!overscroll.reachedTarget()) {
         scheduleUpdate();
       }
@@ -139,37 +144,40 @@ Polymer('polymer-p2r', {
     function finishLoading() {
       setHeaderClassName('');
       if (isP2rVisible() && fingersDown == 0) {
-        console.log("Reset on finishloading");
         overscroll.setTarget(Math.max(0, scroller.scrollTop));
         scheduleUpdate();
       }
     }
 
     scroller.addEventListener('touchstart', function(e) {
-      // Can't actually do this, most likely, as it'll stop content from getting
-      // touch starts? I guess I should really forward the event explicitly?
-      e.preventDefault();
       lastY = e.touches[0].screenY;
       pullStartY = lastY;
       fingersDown++;
       seenTouchMoveThisSequence = false;
 
-//      if (isPulling()) {
+      if (isPulling()) {
+        // Can't actually do this, most likely, as it'll stop content from getting
+        // touch starts? I guess I should really forward the event explicitly?
+        //        e.preventDefault();
         pullStartY = e.touches[0].screenY - overscroll.getOffset();
         var offset = e.touches[0].screenY - pullStartY;
         overscroll.setOffset(offset);
         seenTouchMoveThisSequence = true;
-//      }
+      }
     });
 
     scroller.addEventListener('touchmove', function(e) {
-      e.preventDefault();
+//      e.preventDefault();
 
       var scrollDelta = lastY - e.touches[0].screenY;
       var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
       lastY = e.touches[0].screenY;
-
       var offset = e.touches[0].screenY - pullStartY;
+
+      if(!startingNewPull && !isPulling()) {
+        return;
+      }
+
       overscroll.setOffset(offset);
       scheduleUpdate();
 
