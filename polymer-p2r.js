@@ -66,6 +66,7 @@ Polymer('polymer-p2r', {
     var seenTouchMoveThisSequence = false;
     var fingersDown = 0;
     var overscroll = new Overscroll();
+    var absorbNextTouchMove = false;
 
     function getHeaderClassName(name) {
       return self.className;
@@ -91,15 +92,13 @@ Polymer('polymer-p2r', {
       checkPulled();
       overscroll.step();
 
-      console.log("offset is " + overscroll.getOffset());
-      console.log("scroll top is " + scroller.scrollTop);
+//      console.log("offset is " + overscroll.getOffset());
+//      console.log("scroll top is " + scroller.scrollTop);
 
-      if (overscroll.getOffset() < 0) {
+      if (overscroll.getOffset() <= 0) {
         console.log("SWITCH OUT");
         scroller.scrollTop = -overscroll.getOffset();
         overscroll.setOffset(0);
-      } else if (overscroll.getOffset() > 0 && scroller.scrollTop != 0) {
-        console.log("SWITCH IN");
       }
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
@@ -156,37 +155,38 @@ Polymer('polymer-p2r', {
       seenTouchMoveThisSequence = false;
 
       if (isPulling()) {
-        // Can't actually do this, most likely, as it'll stop content from getting
-        // touch starts? I guess I should really forward the event explicitly?
-        //        e.preventDefault();
-        pullStartY = e.touches[0].screenY - overscroll.getOffset();
-        var offset = e.touches[0].screenY - pullStartY;
-        overscroll.setOffset(offset);
-        seenTouchMoveThisSequence = true;
+        absorbNextTouchMove = true;
       }
     });
 
     scroller.addEventListener('touchmove', function(e) {
-//      e.preventDefault();
+      if (absorbNextTouchMove) {
+        pullStartY = e.touches[0].screenY - overscroll.getOffset();
+        absorbNextTouchMove = false;
+        return;
+      }
 
       var scrollDelta = lastY - e.touches[0].screenY;
       var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
       lastY = e.touches[0].screenY;
       var offset = e.touches[0].screenY - pullStartY;
 
+      console.log("OFFSET IN MOVE IS " + offset);
+
       if(!startingNewPull && !isPulling()) {
+        console.log("VAIL");
         return;
       }
-
-      overscroll.setOffset(offset);
-      scheduleUpdate();
 
       if (seenTouchMoveThisSequence && offset > 0) {
         // Don't preventDefault the first touchMove, it would prevent
         // scroll from occurring.
         e.preventDefault();
       }
+
       seenTouchMoveThisSequence = true;
+      overscroll.setOffset(offset);
+      scheduleUpdate();
     });
 
     scroller.addEventListener('touchcancel', finishPull);
