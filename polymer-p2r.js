@@ -31,7 +31,7 @@ function Overscroll() {
   }
 
   this.reachedTarget = function() {
-    return Math.abs(d - target) < 1 && v = 0;
+    return Math.abs(d - target) < 1 && v === 0;
   }
 
   this.step = function(time) {
