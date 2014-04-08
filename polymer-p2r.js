@@ -31,6 +31,7 @@ function Overscroll() {
   }
 
   this.reachedTarget = function() {
+    console.log("reachedTarget? " + Math.abs(d - target) < 1 && v === 0);
     return Math.abs(d - target) < 1 && v === 0;
   }
 
@@ -256,7 +257,7 @@ Polymer('polymer-p2r', {
       velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
 
       var vel = velocityCalculator.getVelocity();
-      vel = Math.max(-2.5, vel);
+//      vel = Math.max(-2.5, vel);
 
       if (scroller.scrollTop > 10) {
         return;
