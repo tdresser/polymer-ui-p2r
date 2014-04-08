@@ -189,7 +189,7 @@ Polymer('polymer-p2r', {
       console.log("pd opportunity " + new Date().getTime());
       console.log("offset is " + offset);
       console.log("startOffset is " + startOffset);
-      if (seenTouchMoveThisSequence && offset - startOffset > 0) {
+      if (seenTouchMoveThisSequence && offset + startOffset > 0) {
 //        console.log("PREVENTDEFAULT");
         // Don't preventDefault the first touchMove, it would prevent
         // scroll from occurring.
