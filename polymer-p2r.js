@@ -1,40 +1,55 @@
-// Performs an ordinary least squares regression.
-function VelocityCalculator(bufferSize) {
-  var y_buffer = [];
-  var t_buffer = [];
+function Overscroll() {
+  this.MAX_OFFSET = 400;
+  var self = this;
+  var d = 0;
+  var target = null;
+  this.setTarget = function(t) {
+    target = t;
+  }
 
-  var y_sum = 0;
-  var t_sum = 0;
+  this.addFriction = function(delta) {
+    if (delta < 0) {
+      return delta;
+    }
 
-  this.addValue = function(y, t) {
-    y_buffer.push(y);
-    y_sum += y;
-    t_buffer.push(t);
-    t_sum += t;
+    delta = delta/this.MAX_OFFSET;
+    if (delta > 1) {
+      delta = 1;
+    }
+    return this.MAX_OFFSET * (delta/2 - delta/2 * delta/2);
+  }
 
-    if (y_buffer.length > bufferSize) {
-      y_sum -= y_buffer.shift();
-      t_sum -= t_buffer.shift();
+  this.reachedTarget = function() {
+    if (Math.abs(d - target) < 1) {
+      return true;
     }
   }
 
-  this.getVelocity = function() {
-    if (y_buffer.length < bufferSize) {
-      return 0;
+  this.step = function() {
+    if (d > this.MAX_OFFSET) {
+      d = this.MAX_OFFSET;
     }
 
-    var y_mean = y_sum / bufferSize;
-    var t_mean = t_sum / bufferSize;
-
-    var sum_yt = 0;
-    var sum_tt = 0;
-
-    for (var i = 0; i < bufferSize; ++i) {
-      sum_yt += (y_buffer[i] - y_mean) * (t_buffer[i] - t_mean);
-      sum_tt += (t_buffer[i] - t_mean) * (t_buffer[i] - t_mean);
+    if (target === null) {
+      return;
     }
 
-    return sum_yt / sum_tt;
+    if (Math.abs(target - d) < 1) {
+      d = target;
+      target = null;
+    } else {
+      d += (target - d)/10.0;
+    }
+  }
+
+  this.setOffset = function(o) {
+    target = null;
+    d = o;
+    this.step();
+  }
+
+  this.getOffset = function() {
+    return d;
   }
 }
 
@@ -45,22 +60,13 @@ Polymer('polymer-p2r', {
     var p2r = self.$.p2r;
     var scrollcontent = self.$.scrollcontent;
     var framePending = false;
-    var overscrollOffset = 0;
+    var pullStartY = 0;
     var lastY = 0;
-    var startY = 0;
-    var pulling = false;
-    var loading = false;
-    var loadingOffset = 125;
+    var loadingOffset = 150;
     var seenTouchMoveThisSequence = false;
     var fingersDown = 0;
-    var inFlingAnimation = false;
-    var velocityCalculator = new VelocityCalculator(5);
-
-    /*
-    TODO - see if there is a good way to avoid hardcoding this in the css.
-    scrollcontent.style.top="-100px";
-    scrollcontent.style.marginBottom="-100px";
-    */
+    var overscroll = new Overscroll();
+    var absorbNextTouchMove = false;
 
     function getHeaderClassName(name) {
       return self.className;
@@ -77,15 +83,28 @@ Polymer('polymer-p2r', {
     function checkPulled() {
       var triggerOffset = 60;
       if (getHeaderClassName() != 'loading') {
-        setHeaderClassName(overscrollOffset > triggerOffset ? 'pulled' : '');
+        setHeaderClassName(overscroll.getOffset() > triggerOffset ? 'pulled' : '');
       }
     }
 
     function onAnimationFrame() {
       framePending = false;
       checkPulled();
-      translateY(scrollcontent, overscrollOffset);
-      translateY(p2r, overscrollOffset - p2r.clientHeight);
+      overscroll.step();
+
+//      console.log("offset is " + overscroll.getOffset());
+//      console.log("scroll top is " + scroller.scrollTop);
+
+      if (overscroll.getOffset() <= 0) {
+        console.log("SWITCH OUT");
+        scroller.scrollTop = -overscroll.getOffset();
+        overscroll.setOffset(0);
+      }
+      translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
+      translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
+      if (!overscroll.reachedTarget()) {
+        scheduleUpdate();
+      }
     }
 
     function scheduleUpdate() {
@@ -95,177 +114,89 @@ Polymer('polymer-p2r', {
       }
     }
 
-    function addFriction(delta) {
-      var scale = 2;
-      var maxDelta = 200;
-      delta /= scale;
-      if (delta > maxDelta)
-      delta = maxDelta;
 
-      // We want a curve that starts out linear, and slopes down
-      // to slope=0 by maxDelta.
-      var adj = delta - delta*delta/(2*maxDelta);
-      return adj;
+    function isP2rVisible() {
+      return scroller.scrollTop <= overscroll.getOffset();
     }
 
-    function setAnimationEnabled(enabled) {
-      var val = enabled ? '-webkit-transform 0.2s ease-in-out' : '';
-      scrollcontent.style.webkitTransition = val;
-      p2r.style.webkitTransition = val;
+    function isPulling() {
+      return overscroll.getOffset() > 0.2;
     }
 
-    function setOffset(offset) {
-      if (loading) {
-        offset += loadingOffset;
+    function finishPull(e) {
+      fingersDown--;
+
+      if (!isPulling() || fingersDown != 0 || !isP2rVisible()) {
+        return;
       }
-      overscrollOffset = addFriction(offset);
+
+      if (getHeaderClassName() == 'pulled') {
+        setHeaderClassName('loading');
+        setTimeout(finishLoading, 2000);
+        overscroll.setTarget(loadingOffset);
+      } else {
+        overscroll.setTarget(Math.max(0, scroller.scrollTop));
+      }
       scheduleUpdate();
     }
 
-    function isP2rVisible() {
-      return scroller.scrollTop <= addFriction(loadingOffset);
-    }
-
-    function finishPull() {
-      if (!pulling) {
-        setOffset(0);
-      }
-    }
-
     function finishLoading() {
-      loading = false;
-      if (pulling) {
-        setHeaderClassName('');
-        checkPulled();
-      }
-      if (isP2rVisible()) {
-        setAnimationEnabled(true);
-        overscrollOffset = scroller.scrollTop;
+      setHeaderClassName('');
+      if (isP2rVisible() && fingersDown == 0) {
+        overscroll.setTarget(Math.max(0, scroller.scrollTop));
         scheduleUpdate();
       }
     }
 
     scroller.addEventListener('touchstart', function(e) {
-      if (inFlingAnimation) {
-        scrollcontent.removeEventListener('webkitTransitionEnd', firstEnd);
-        scrollcontent.addEventListener('webkitTransitionEnd', secondEnd);
-        scroller.addEventListener('scroll', onScrollEvent);
-      }
-      inFlingAnimation = false;
+      lastY = e.touches[0].screenY + scroller.scrollTop;
+      pullStartY = lastY;
       fingersDown++;
       seenTouchMoveThisSequence = false;
-      if (e.touches.length == 1) {
-        lastY = e.touches[0].clientY;
-        setAnimationEnabled(false);
-        if (!loading) {
-          scroller.scrollTop -= overscrollOffset;
-          overscrollOffset = 0;
-          scheduleUpdate();
-          setHeaderClassName('');
-        }
+
+      if (isPulling()) {
+        absorbNextTouchMove = true;
       }
     });
 
     scroller.addEventListener('touchmove', function(e) {
-      if (!pulling &&
-          scroller.scrollTop === 0 &&
-          e.touches.length == 1 &&
-          e.touches[0].clientY > lastY) {
-        startY = e.touches[0].clientY;
-        pulling = true;
-      }
+      console.log("MOVE");
 
-      if (pulling) {
-        var offset = e.touches[0].clientY - startY;
-        if (offset >= 0) {
-          setOffset(offset);
-          // Don't preventDefault the first touchMove, it would prevent
-          // scroll from occurring.
-          if (seenTouchMoveThisSequence) {
-            e.preventDefault();
-          }
-        } else {
-          pulling = false;
-          finishPull();
-        }
-      }
-      seenTouchMoveThisSequence = true;
-      lastY = e.touches[0].clientY;
-    });
-
-    scroller.addEventListener('touchcancel', function(e) {
-      fingersDown--;
-      finishPull();
-    });
-    scroller.addEventListener('touchend', function(e) {
-      fingersDown--;
-      setAnimationEnabled(true);
-      pulling = false;
-      if (getHeaderClassName() == 'pulled') {
-        setHeaderClassName('loading');
-        loading = true;
-        setOffset(0);
-        setTimeout(finishLoading, 2000);
-      } else {
-        finishPull();
-      }
-    });
-
-    var frame = 0;
-    var flingAnimationTimeSeconds = 0.2;
-
-    function secondEnd() {
-      scrollcontent.removeEventListener('webkitTransitionEnd', secondEnd);
-      scrollcontent.style['-webkit-animation'] = '';
-      scroller.addEventListener('scroll', onScrollEvent);
-    }
-
-    function firstEnd() {
-      var val = '-webkit-transform ' + flingAnimationTimeSeconds + 's ease-in';
-      scrollcontent.style.webkitTransition = val;
-      p2r.style.webkitTransition = val;
-
-      translateY(scrollcontent, overscrollOffset);
-      translateY(p2r, overscrollOffset - p2r.clientHeight);
-
-      scrollcontent.removeEventListener('webkitTransitionEnd', firstEnd);
-      scrollcontent.addEventListener('webkitTransitionEnd', secondEnd);
-    }
-
-    function onScrollEvent(e) {
-      frame++;
-      velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
-
-      var vel = velocityCalculator.getVelocity();
-      vel = Math.max(-2.5, vel);
-
-      // The higher the velocity, the longer the animation should be. We solve
-      // for the duration of the animation based on the kinematic equations,
-      // using a made up acceleration that feels about right. Note that since
-      // the animation path isn't a parabola, this isn't quite correct.
-      var acceleration = 10;
-      var duration = (-vel + Math.sqrt(vel*vel)) / acceleration;
-      var distance = -vel * (duration/2.0) +
-          0.5 * acceleration * (duration/2.0) * (duration/2.0);
-      distance *= 100;
-
-      if (distance < 10 || scroller.scrollTop > 10) {
+      if (absorbNextTouchMove) {
+        pullStartY = e.touches[0].screenY - overscroll.getOffset();
+        absorbNextTouchMove = false;
+        console.log("ABSORBING");
+        e.preventDefault();
         return;
       }
 
-      if (fingersDown == 0 && !inFlingAnimation) {
-        inFlingAnimation = true;
-        var val = '-webkit-transform ' + duration + 's ease-out';
-        scrollcontent.style.webkitTransition = val;
-        p2r.style.webkitTransition = val;
+      var scrollDelta = lastY - e.touches[0].screenY;
+      var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
+      lastY = e.touches[0].screenY;
 
-        scroller.removeEventListener('scroll', onScrollEvent);
-        scrollcontent.addEventListener('webkitTransitionEnd', firstEnd);
-        translateY(scrollcontent, distance);
-        translateY(p2r, distance - p2r.clientHeight);
+      var offset = e.touches[0].screenY - pullStartY;
+
+//      console.log("OFFSET IN MOVE IS " + offset);
+
+      if(!startingNewPull && !isPulling()) {
+        console.log("BAIL");
+        return;
       }
-    }
 
-    scroller.addEventListener('scroll', onScrollEvent);
+      console.log("pd opportunity " + new Date().getTime());
+      if (seenTouchMoveThisSequence && offset > 0) {
+//        console.log("PREVENTDEFAULT");
+        // Don't preventDefault the first touchMove, it would prevent
+        // scroll from occurring.
+        e.preventDefault();
+      }
+
+      seenTouchMoveThisSequence = true;
+      overscroll.setOffset(offset);
+      scheduleUpdate();
+    });
+
+    scroller.addEventListener('touchcancel', finishPull);
+    scroller.addEventListener('touchend', finishPull);
   }
 });
