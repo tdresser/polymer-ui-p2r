@@ -2,7 +2,13 @@ function Overscroll() {
   this.MAX_OFFSET = 400;
   var self = this;
   var d = 0;
+  var v = 0;
+  var base_a = 10;
   var target = null;
+  var step = 1;
+  var prev_time = 0;
+  var friction = 0.9;
+
   this.setTarget = function(t) {
     target = t;
   }
@@ -25,7 +31,10 @@ function Overscroll() {
     }
   }
 
-  this.step = function() {
+  this.step = function(time) {
+    var delta = time - prev_time;
+    prev_time = time;
+
     if (d > this.MAX_OFFSET) {
       d = this.MAX_OFFSET;
     }
@@ -38,20 +47,65 @@ function Overscroll() {
       d = target;
       target = null;
     } else {
-      d += (target - d)/10.0;
+      var a = Math.abs(base_a * (target - d)/10.0);
+      console.log("a " + a);
+      v += (a * delta) * friction;
+      d += v * delta;
+//      d += (target - d)/10.0;
     }
   }
 
   this.setOffset = function(o) {
     target = null;
     d = o;
-    this.step();
+    this.step(0);
   }
 
   this.getOffset = function() {
     return d;
   }
 }
+
+// Performs an ordinary least squares regression.
+function VelocityCalculator(bufferSize) {
+  var y_buffer = [];
+  var t_buffer = [];
+
+  var y_sum = 0;
+  var t_sum = 0;
+
+  this.addValue = function(y, t) {
+    y_buffer.push(y);
+    y_sum += y;
+    t_buffer.push(t);
+    t_sum += t;
+
+    if (y_buffer.length > bufferSize) {
+      y_sum -= y_buffer.shift();
+      t_sum -= t_buffer.shift();
+    }
+  }
+
+  this.getVelocity = function() {
+    if (y_buffer.length < bufferSize) {
+      return 0;
+    }
+
+    var y_mean = y_sum / bufferSize;
+    var t_mean = t_sum / bufferSize;
+
+    var sum_yt = 0;
+    var sum_tt = 0;
+
+    for (var i = 0; i < bufferSize; ++i) {
+      sum_yt += (y_buffer[i] - y_mean) * (t_buffer[i] - t_mean);
+      sum_tt += (t_buffer[i] - t_mean) * (t_buffer[i] - t_mean);
+    }
+
+    return sum_yt / sum_tt;
+  }
+}
+
 
 Polymer('polymer-p2r', {
   ready: function() {
@@ -66,6 +120,8 @@ Polymer('polymer-p2r', {
     var fingersDown = 0;
     var overscroll = new Overscroll();
     var absorbNextTouchMove = false;
+    var velocityCalculator = new VelocityCalculator(5);
+
 
     function getHeaderClassName(name) {
       return self.className;
@@ -86,10 +142,10 @@ Polymer('polymer-p2r', {
       }
     }
 
-    function onAnimationFrame() {
+    function onAnimationFrame(time) {
       framePending = false;
       checkPulled();
-      overscroll.step();
+      overscroll.step(time);
 
 //      console.log("offset is " + overscroll.getOffset());
 //      console.log("scroll top is " + scroller.scrollTop);
@@ -183,6 +239,33 @@ Polymer('polymer-p2r', {
       scheduleUpdate();
     });
 
+    function onScrollEvent(e) {
+      frame++;
+      velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
+
+      var vel = velocityCalculator.getVelocity();
+      vel = Math.max(-2.5, vel);
+
+      // The higher the velocity, the longer the animation should be. We solve
+      // for the duration of the animation based on the kinematic equations,
+      // using a made up acceleration that feels about right. Note that since
+      // the animation path isn't a parabola, this isn't quite correct.
+      var acceleration = 10;
+      var duration = (-vel + Math.sqrt(vel*vel)) / acceleration;
+      var distance = -vel * (duration/2.0) +
+          0.5 * acceleration * (duration/2.0) * (duration/2.0);
+      distance *= 100;
+
+      if (distance < 10 || scroller.scrollTop > 10) {
+        return;
+      }
+
+      if (fingersDown == 0 && !inFlingAnimation) {
+        // TODO - do fling.
+      }
+    }
+
+    scroller.addEventListener('scroll', onScrollEvent);
     scroller.addEventListener('touchcancel', finishPull);
     scroller.addEventListener('touchend', finishPull);
   }
