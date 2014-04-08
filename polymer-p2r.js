@@ -60,8 +60,9 @@ function Overscroll() {
       }
       v += (a * delta);
       console.log("v " + v);
-      if (Math.abs(target - d) < 10 && v < 0) {
-        var scale = Math.abs(target - d) / 10;
+      var slow_bounds = 30;
+      if (Math.abs(target - d) < slow_bounds && v < 0) {
+        var scale = Math.abs(target - d) / slow_bounds;
         console.log("Scale is " + scale);
         scale *= scale;
         d += v * delta * scale;
