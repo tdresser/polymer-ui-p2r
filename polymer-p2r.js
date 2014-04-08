@@ -49,7 +49,7 @@ function Overscroll() {
       return;
     }
 
-    if (target !== null && Math.abs(target - d) < 1 && v <= 0) {
+    if (target !== null && target - d < 1 && v <= 0) {
       v = 0;
       d = target;
       target = null;
