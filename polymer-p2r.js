@@ -33,6 +33,10 @@ function Overscroll() {
 
   this.step = function(time) {
     var delta = time - prev_time;
+    if (prev_time === 0) {
+      delta = 16;
+    }
+
     prev_time = time;
 
     if (d > this.MAX_OFFSET) {
@@ -47,7 +51,7 @@ function Overscroll() {
       d = target;
       target = null;
     } else {
-      var a = -Math.abs(base_a * (target - d)/100.0);
+      var a = -Math.abs(base_a * (target - d)/10.0);
       v += (a * delta) * friction;
       d += v * delta;
 //      d += (target - d)/10.0;
