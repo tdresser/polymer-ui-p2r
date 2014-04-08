@@ -265,6 +265,7 @@ Polymer('polymer-p2r', {
 //      }
 
       if (fingersDown == 0 && !inFlingAnimation) {
+        console.log("FLING " + vel);
         overscroll.setVelocity(vel);
       }
     }
