@@ -274,6 +274,7 @@ Polymer('polymer-p2r', {
 
       if (fingersDown == 0) {
         console.log("FLING " + vel);
+        overscroll.setTarget(0);
         overscroll.setVelocity(vel);
         scheduleUpdate();
       }
