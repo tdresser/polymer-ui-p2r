@@ -48,10 +48,14 @@ function Overscroll() {
       target = null;
     } else {
       var a = Math.abs(base_a * (target - d)/10.0);
-      console.log("a " + a);
       v += (a * delta) * friction;
       d += v * delta;
 //      d += (target - d)/10.0;
+      console.log("t " + delta);
+      console.log("a " + a);
+      console.log("v " + v);
+      console.log("d " + d);
+
     }
   }
 
