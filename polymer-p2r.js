@@ -63,7 +63,6 @@ Polymer('polymer-p2r', {
     var pullStartY = 0;
     var lastY = 0;
     var loadingOffset = 150;
-    var seenTouchMoveThisSequence = false;
     var fingersDown = 0;
     var overscroll = new Overscroll();
     var absorbNextTouchMove = false;
@@ -154,7 +153,6 @@ Polymer('polymer-p2r', {
       pullStartY = lastY;
       startOffset = overscroll.getOffset();
       fingersDown++;
-      seenTouchMoveThisSequence = false;
 
       if (isPulling()) {
         absorbNextTouchMove = true;
@@ -189,14 +187,13 @@ Polymer('polymer-p2r', {
       console.log("pd opportunity " + new Date().getTime());
       console.log("offset is " + offset);
       console.log("startOffset is " + startOffset);
-      if (seenTouchMoveThisSequence && offset + startOffset > 0) {
+      if (offset - startOffset > 0) {
 //        console.log("PREVENTDEFAULT");
         // Don't preventDefault the first touchMove, it would prevent
         // scroll from occurring.
         e.preventDefault();
       }
 
-      seenTouchMoveThisSequence = true;
       overscroll.setOffset(offset);
       scheduleUpdate();
     });
