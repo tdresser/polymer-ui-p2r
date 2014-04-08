@@ -31,7 +31,7 @@ function Overscroll() {
   }
 
   this.reachedTarget = function() {
-    console.log("reachedTarget? " + Math.abs(d - target) < 1 && v === 0);
+    console.log("reachedTarget? " + (Math.abs(d - target) < 1 && v === 0));
     return Math.abs(d - target) < 1 && v === 0;
   }
 
@@ -256,7 +256,7 @@ Polymer('polymer-p2r', {
       console.log("ON SCROLL EVENT");
       velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
 
-      var vel = velocityCalculator.getVelocity();
+      var vel = -velocityCalculator.getVelocity() / 20;
 //      vel = Math.max(-2.5, vel);
 
       if (scroller.scrollTop > 10) {
@@ -265,7 +265,7 @@ Polymer('polymer-p2r', {
 
       if (fingersDown == 0) {
         console.log("FLING " + vel);
-        overscroll.setVelocity(vel / 20);
+        overscroll.setVelocity(vel);
         scheduleUpdate();
       }
     }
