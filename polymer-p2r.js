@@ -3,7 +3,7 @@ function Overscroll() {
   var self = this;
   var d = 0;
   var v = 0;
-  var base_a = 10;
+  var base_a = 1;
   var target = null;
   var step = 1;
   var prev_time = 0;
@@ -47,7 +47,7 @@ function Overscroll() {
       d = target;
       target = null;
     } else {
-      var a = Math.abs(base_a * (target - d)/10.0);
+      var a = -Math.abs(base_a * (target - d)/10.0);
       v += (a * delta) * friction;
       d += v * delta;
 //      d += (target - d)/10.0;
