@@ -254,7 +254,7 @@ Polymer('polymer-p2r', {
     });
 
     function onScrollEvent(e) {
-      frame++;
+      console.log("ON SCROLL EVENT");
       velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
 
       var vel = velocityCalculator.getVelocity();
