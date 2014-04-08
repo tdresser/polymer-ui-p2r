@@ -59,8 +59,10 @@ function Overscroll() {
         a = -Math.abs(base_a * (target - d)/1000.0);
       }
       v += (a * delta);
+      console.log("v " + v);
       // TODO - this is ugly
-      if (target - d > 1) {
+      if (Math.abs(target - d > 1) && v < 0) {
+        console.log("Multiplying by " + (1/Math.abs(target - d)));
         d += v * delta * (1/Math.abs(target - d));
       } else {
         d += v * delta;
