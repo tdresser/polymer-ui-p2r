@@ -67,6 +67,7 @@ Polymer('polymer-p2r', {
     var fingersDown = 0;
     var overscroll = new Overscroll();
     var absorbNextTouchMove = false;
+    var startOffset = 0;
 
     function getHeaderClassName(name) {
       return self.className;
@@ -151,6 +152,7 @@ Polymer('polymer-p2r', {
     scroller.addEventListener('touchstart', function(e) {
       lastY = e.touches[0].screenY + scroller.scrollTop;
       pullStartY = lastY;
+      startOffset = overscroll.getOffset();
       fingersDown++;
       seenTouchMoveThisSequence = false;
 
@@ -164,6 +166,7 @@ Polymer('polymer-p2r', {
 
       if (absorbNextTouchMove) {
         pullStartY = e.touches[0].screenY - overscroll.getOffset();
+        startOffset = overscroll.getOffset();
         absorbNextTouchMove = false;
         console.log("ABSORBING");
         e.preventDefault();
@@ -184,7 +187,9 @@ Polymer('polymer-p2r', {
       }
 
       console.log("pd opportunity " + new Date().getTime());
-      if (seenTouchMoveThisSequence && offset > 0) {
+      console.log("offset is " + offset);
+      console.log("startOffset is " + startOffset);
+      if (seenTouchMoveThisSequence && offset - startOffset > 0) {
 //        console.log("PREVENTDEFAULT");
         // Don't preventDefault the first touchMove, it would prevent
         // scroll from occurring.
