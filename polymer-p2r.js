@@ -149,7 +149,7 @@ Polymer('polymer-p2r', {
     }
 
     scroller.addEventListener('touchstart', function(e) {
-      lastY = e.touches[0].screenY;
+      lastY = e.touches[0].screenY + scroller.scrollTop;
       pullStartY = lastY;
       fingersDown++;
       seenTouchMoveThisSequence = false;
@@ -160,25 +160,32 @@ Polymer('polymer-p2r', {
     });
 
     scroller.addEventListener('touchmove', function(e) {
+      console.log("MOVE");
+
       if (absorbNextTouchMove) {
         pullStartY = e.touches[0].screenY - overscroll.getOffset();
         absorbNextTouchMove = false;
+        console.log("ABSORBING");
+        e.preventDefault();
         return;
       }
 
       var scrollDelta = lastY - e.touches[0].screenY;
       var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
       lastY = e.touches[0].screenY;
+
       var offset = e.touches[0].screenY - pullStartY;
 
-      console.log("OFFSET IN MOVE IS " + offset);
+//      console.log("OFFSET IN MOVE IS " + offset);
 
       if(!startingNewPull && !isPulling()) {
-        console.log("VAIL");
+        console.log("BAIL");
         return;
       }
 
+      console.log("pd opportunity " + new Date().getTime());
       if (seenTouchMoveThisSequence && offset > 0) {
+//        console.log("PREVENTDEFAULT");
         // Don't preventDefault the first touchMove, it would prevent
         // scroll from occurring.
         e.preventDefault();
