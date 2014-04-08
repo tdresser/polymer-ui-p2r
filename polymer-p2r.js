@@ -48,7 +48,7 @@ function Overscroll() {
       return;
     }
 
-    if (target - d < 1) {
+    if (target - d > 1) {
       v = 0;
       d = target;
       target = null;
