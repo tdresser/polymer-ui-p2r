@@ -14,6 +14,10 @@ function Overscroll() {
     v = 0;
   }
 
+  this.setVelocity = function(vel) {
+    v = vel;
+  }
+
   this.addFriction = function(delta) {
     if (delta < 0) {
       return delta;
@@ -56,7 +60,6 @@ function Overscroll() {
       var a = -Math.abs(base_a * (target - d)/1000.0);
       v += (a * delta) * Math.pow(friction, delta);
       d += v * delta;
-//      d += (target - d)/10.0;
       console.log("t " + delta);
       console.log("a " + a);
       console.log("v " + v);
@@ -257,22 +260,12 @@ Polymer('polymer-p2r', {
       var vel = velocityCalculator.getVelocity();
       vel = Math.max(-2.5, vel);
 
-      // The higher the velocity, the longer the animation should be. We solve
-      // for the duration of the animation based on the kinematic equations,
-      // using a made up acceleration that feels about right. Note that since
-      // the animation path isn't a parabola, this isn't quite correct.
-      var acceleration = 10;
-      var duration = (-vel + Math.sqrt(vel*vel)) / acceleration;
-      var distance = -vel * (duration/2.0) +
-          0.5 * acceleration * (duration/2.0) * (duration/2.0);
-      distance *= 100;
-
-      if (distance < 10 || scroller.scrollTop > 10) {
-        return;
-      }
+//      if (scroller.scrollTop > 10) {
+//        return;
+//      }
 
       if (fingersDown == 0 && !inFlingAnimation) {
-        // TODO - do fling.
+        overscroll.setVelocity(vel);
       }
     }
 
