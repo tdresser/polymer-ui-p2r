@@ -51,7 +51,7 @@ function Overscroll() {
       d = target;
       target = null;
     } else {
-      var a = -Math.abs(base_a * (target - d)/10.0);
+      var a = -Math.abs(base_a * (target - d)/100.0);
       v += (a * delta) * friction;
       d += v * delta;
 //      d += (target - d)/10.0;
