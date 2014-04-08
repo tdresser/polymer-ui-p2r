@@ -11,6 +11,7 @@ function Overscroll() {
 
   this.setTarget = function(t) {
     target = t;
+    v = 0;
   }
 
   this.addFriction = function(delta) {
@@ -47,7 +48,8 @@ function Overscroll() {
       return;
     }
 
-    if (Math.abs(target - d) < 1) {
+    if (target - d < 1) {
+      v = 0;
       d = target;
       target = null;
     } else {
@@ -66,6 +68,7 @@ function Overscroll() {
   this.setOffset = function(o) {
     target = null;
     d = o;
+    v = 0;
     this.step(0);
   }
 
