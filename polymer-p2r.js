@@ -31,9 +31,7 @@ function Overscroll() {
   }
 
   this.reachedTarget = function() {
-    if (Math.abs(d - target) < 1) {
-      return true;
-    }
+    return Math.abs(d - target) < 1 && v = 0;
   }
 
   this.step = function(time) {
@@ -260,13 +258,14 @@ Polymer('polymer-p2r', {
       var vel = velocityCalculator.getVelocity();
       vel = Math.max(-2.5, vel);
 
-//      if (scroller.scrollTop > 10) {
-//        return;
-//      }
+      if (scroller.scrollTop > 10) {
+        return;
+      }
 
       if (fingersDown == 0) {
         console.log("FLING " + vel);
         overscroll.setVelocity(vel);
+        scheduleUpdate();
       }
     }
 
