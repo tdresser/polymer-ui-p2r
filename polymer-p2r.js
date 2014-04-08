@@ -7,7 +7,6 @@ function Overscroll() {
   var target = null;
   var step = 1;
   var prev_time = 0;
-  var friction = 0.98;
 
   this.setTarget = function(t) {
     target = t;
@@ -59,8 +58,8 @@ function Overscroll() {
       if (target !== null) {
         a = -Math.abs(base_a * (target - d)/1000.0);
       }
-      v += (a * delta) * Math.pow(friction, delta);
-      d += v * delta;
+      v += (a * delta);
+      d += v * delta * Math.log(target - d);
     }
   }
 
