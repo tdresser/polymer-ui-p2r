@@ -11,12 +11,10 @@ function Overscroll() {
 
   this.setTarget = function(t) {
     target = t;
-    console.log("vel set 0");
     v = 0;
   }
 
   this.setVelocity = function(vel) {
-    console.log("vel set " + vel);
     v = vel;
   }
 
@@ -33,9 +31,6 @@ function Overscroll() {
   }
 
   this.reachedTarget = function() {
-    console.log("reachedTarget? " + (Math.abs(d - target) < 1 && v === 0));
-    console.log("Math.abs(d - target) " + Math.abs(d - target));
-    console.log("v " + v);
     return Math.abs(d - target) < 1 && v === 0;
   }
 
@@ -56,7 +51,6 @@ function Overscroll() {
     }
 
     if (target !== null && target - d > 1) {
-      console.log("vel set " + 0);
       v = 0;
       d = target;
       target = null;
@@ -67,11 +61,6 @@ function Overscroll() {
       }
       v += (a * delta) * Math.pow(friction, delta);
       d += v * delta;
-      console.log("t " + delta);
-      console.log("a " + a);
-      console.log("v " + v);
-      console.log("d " + d);
-      console.log("f " + Math.pow(friction, delta));
     }
   }
 
@@ -79,7 +68,6 @@ function Overscroll() {
     target = null;
     d = o;
     v = 0;
-    console.log("vel set " + 0);
     this.step(0);
   }
 
@@ -169,11 +157,7 @@ Polymer('polymer-p2r', {
       checkPulled();
       overscroll.step(time);
 
-//      console.log("offset is " + overscroll.getOffset());
-//      console.log("scroll top is " + scroller.scrollTop);
-
       if (overscroll.getOffset() <= 0) {
-        console.log("SWITCH OUT");
         scroller.scrollTop = -overscroll.getOffset();
         overscroll.setOffset(0);
       }
@@ -262,17 +246,15 @@ Polymer('polymer-p2r', {
     });
 
     function onScrollEvent(e) {
-      console.log("ON SCROLL EVENT");
       velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
 
-      var vel = -velocityCalculator.getVelocity() / 10;
+      var vel = -velocityCalculator.getVelocity() / 3;
 
       if (scroller.scrollTop > 10) {
         return;
       }
 
       if (fingersDown == 0) {
-        console.log("FLING " + vel);
         overscroll.setTarget(0);
         overscroll.setVelocity(vel);
         scheduleUpdate();
