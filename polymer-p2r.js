@@ -59,7 +59,12 @@ function Overscroll() {
         a = -Math.abs(base_a * (target - d)/1000.0);
       }
       v += (a * delta);
-      d += v * delta * Math.log(target - d);
+      // TODO - this is ugly
+      if (target - d > 1) {
+        d += v * delta * (1/Math.abs(target - d));
+      } else {
+        d += v * delta;
+      }
     }
   }
 
