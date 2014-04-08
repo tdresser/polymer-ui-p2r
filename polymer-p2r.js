@@ -11,10 +11,12 @@ function Overscroll() {
 
   this.setTarget = function(t) {
     target = t;
+    console.log("vel set 0");
     v = 0;
   }
 
   this.setVelocity = function(vel) {
+    console.log("vel set " + vel);
     v = vel;
   }
 
@@ -32,6 +34,8 @@ function Overscroll() {
 
   this.reachedTarget = function() {
     console.log("reachedTarget? " + (Math.abs(d - target) < 1 && v === 0));
+    console.log("Math.abs(d - target) " + Math.abs(d - target));
+    console.log("v " + v);
     return Math.abs(d - target) < 1 && v === 0;
   }
 
@@ -47,16 +51,20 @@ function Overscroll() {
       d = this.MAX_OFFSET;
     }
 
-    if (target === null) {
+    if (target === null && v === 0) {
       return;
     }
 
-    if (target - d > 1) {
+    if (target !== null && target - d > 1) {
+      console.log("vel set " + 0);
       v = 0;
       d = target;
       target = null;
     } else {
-      var a = -Math.abs(base_a * (target - d)/1000.0);
+      var a = base_a;
+      if (target !== null) {
+        a = -Math.abs(base_a * (target - d)/1000.0);
+      }
       v += (a * delta) * Math.pow(friction, delta);
       d += v * delta;
       console.log("t " + delta);
@@ -71,6 +79,7 @@ function Overscroll() {
     target = null;
     d = o;
     v = 0;
+    console.log("vel set " + 0);
     this.step(0);
   }
 
