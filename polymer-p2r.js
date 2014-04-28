@@ -56,7 +56,7 @@ function Overscroll() {
     }
 
     if (target === null) {
-      fling_time += delta;
+      fling_time += time;
     }
 
     var target_pos = target === null ? 0 : target;
