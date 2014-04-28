@@ -76,7 +76,7 @@ function Overscroll() {
 
     var lerp = 1;
     if (fling_time < 100) {
-      lerp = fling_step / 100;
+      lerp = fling_time / 100;
     }
 
     var a = lerp * this.SPRING_CONSTANT * (target - d) - this.DAMPING * v;
