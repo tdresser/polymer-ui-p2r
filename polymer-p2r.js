@@ -273,6 +273,7 @@ Polymer('polymer-p2r', {
       }
 
       if (offset > 0 && !isFirstTouchMove) {
+        console.log("PREVENT");
         e.preventDefault();
       }
 
