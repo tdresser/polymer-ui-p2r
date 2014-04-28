@@ -1,18 +1,20 @@
 function Overscroll() {
   this.MAX_OFFSET = 400;
-  this.GRAVITY = -0.2;
-  this.FRICTION = 0.95;
+  this.GRAVITY = -0.18;
+  this.FRICTION = 0.93;
   this.SPRING_SCALE = 50;
+  this.SPRING_FORCE = 0.8;
   var self = this;
   var d = 0;
   var v = 0;
   var target = null;
   var prev_time = 0;
 
-  this.setParms = function(g, f, s) {
+  this.setParms = function(g, f, s, x) {
     this.GRAVITY = g;
     this.FRICTION = f;
     this.SPRING_SCALE = s;
+    this.SPRING_FORCE = x;
   }
 
   this.setTarget = function(t) {
@@ -62,8 +64,8 @@ function Overscroll() {
     }
 
     var dist_to_target = (target - d) / this.SPRING_SCALE;
-    var spring = -this.GRAVITY * (1 / (dist_to_target * dist_to_target + 1));
-//    var spring = -1.5 * GRAVITY * (1 / (Math.abs(dist_to_target / 100) + 1));
+    var spring = -this.SPRING_FORCE * this.GRAVITY *
+        (1 / (dist_to_target * dist_to_target + 1));
 
     var a = 0;
     a += spring;
