@@ -1,6 +1,6 @@
 function Overscroll() {
   // Constants for tuning physics.
-  this.MAX_OFFSET = 400;
+  this.MAX_OFFSET = 1200;
 //  this.GRAVITY = -0.18;
   this.GRAVITY = -0.0008;
   this.FRICTION = 1;
@@ -74,7 +74,7 @@ function Overscroll() {
 
     var a = 0;
     if (v < 0) {
-      a += spring;
+      a -= spring * v;
     }
     a += this.GRAVITY;
     v += a * delta;
