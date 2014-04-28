@@ -3,7 +3,7 @@ function Overscroll() {
   var self = this;
   var d = 0;
   var v = 0;
-  var gravity = -0.02;
+  var gravity = -0.005;
   var target = null;
   var step = 1;
   var prev_time = 0;
@@ -61,7 +61,7 @@ function Overscroll() {
       console.log("down " + gravity);
       var a = 0;
       a += gravity;
-      a += 0.02 * ( 1 / (dist_to_target * dist_to_target + 1));
+      a -= gravity * ( 1 / (dist_to_target * dist_to_target + 1));
       v += a * delta;
       d += v * delta;
     }
