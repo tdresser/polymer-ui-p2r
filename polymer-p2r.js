@@ -9,6 +9,12 @@ function Overscroll() {
   var target = null;
   var prev_time = 0;
 
+  this.setParms = function(g, f, s) {
+    this.GRAVITY = g;
+    this.FRICTION = f;
+    this.SPRING_SCALE = s;
+  }
+
   this.setTarget = function(t) {
     console.log("setTarget");
     target = t;
