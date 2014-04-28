@@ -53,9 +53,9 @@ function Overscroll() {
       d = this.MAX_OFFSET;
     }
 
-    var dist_to_target = target - d;
-    //      var spring = -GRAVITY * (1 / (dist_to_target * dist_to_target + 1));
-    var spring = -1.5 * GRAVITY * (1 / (Math.abs(dist_to_target / 100) + 1));
+    var dist_to_target = (target - d) / 5;
+    var spring = -1.5 * GRAVITY * (1 / (dist_to_target * dist_to_target + 1));
+//    var spring = -1.5 * GRAVITY * (1 / (Math.abs(dist_to_target / 100) + 1));
 
     var a = 0;
     a += spring;
