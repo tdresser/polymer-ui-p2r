@@ -171,6 +171,7 @@ Polymer('polymer-p2r', {
 
       if (overscroll.getOffset() <= 0) {
         scroller.scrollTop = -overscroll.getOffset();
+        console.log("Realign due to broken scrollTop");
         overscroll.setOffset(0);
       }
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
