@@ -2,11 +2,10 @@ function Overscroll() {
   // Constants for tuning physics.
   this.MAX_OFFSET = 1200;
 
-  // Constants to configure spring physics when approaching target.
+  // Constants to configure spring physics
   this.SPRING_CONSTANT = 0.0005;
-  this.DAMPING = 0.05;
-
-  this.SPRING_LERP_POW = 2;
+  this.DAMPING = 0.07;
+  this.SPRING_LERP_POW = 4;
 
   var self = this;
   var d = 0;
@@ -14,7 +13,8 @@ function Overscroll() {
   var target = null;
   var prev_time = 0;
 
-  var fling_time = 0;
+  // Time since last fling, or null if not in fling.
+  var fling_time = null;
 
   // Only used for tweaking via developer console.
   this.setParms = function(k, b) {
@@ -64,14 +64,16 @@ function Overscroll() {
     }
 
     prev_time = time;
-    fling_time += delta;
+    if (fling_time !== null) {
+      fling_time += delta;
+    }
 
     if (d > this.MAX_OFFSET) {
       d = this.MAX_OFFSET;
     }
 
     var lerp = 1;
-    if (fling_time < 500) {
+    if (fling_time !== null && fling_time < 500) {
       lerp = fling_time / 500;
     }
 
@@ -100,7 +102,7 @@ function Overscroll() {
   }
 
   this.setOffset = function(o) {
-    fling_time = 100000000;
+    fling_time = Number.MAX_VALUE;
     target = null;
     d = o;
     v = 0;
