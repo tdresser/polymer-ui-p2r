@@ -61,6 +61,7 @@ function Overscroll() {
     a += gravity;
     a += spring;
     v += a * delta;
+
     d += v * delta;
 
     if (target !== null && target - d > 1) {
