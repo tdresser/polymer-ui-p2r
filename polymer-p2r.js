@@ -173,11 +173,11 @@ Polymer('polymer-p2r', {
       checkPulled();
       overscroll.step(time);
 
-//      if (overscroll.getOffset() <= 0) {
-//        scroller.scrollTop = -overscroll.getOffset();
-//        console.log("Realign due to broken scrollTop");
-//        overscroll.setOffset(0);
-//      }
+      if (overscroll.getOffset() <= 0) {
+        scroller.scrollTop = -overscroll.getOffset();
+        console.log("Realign due to broken scrollTop");
+        overscroll.setOffset(0);
+      }
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
       if (!overscroll.reachedTarget()) {
