@@ -76,7 +76,10 @@ function Overscroll() {
     }
     a += this.GRAVITY;
     v += a * delta;
-    v *= Math.pow(this.FRICTION, delta);
+
+    if (v > 0) {
+      v *= Math.pow(this.FRICTION, delta);
+    }
     d += v * delta;
 
     console.log("GRAVITY " + this.GRAVITY);
