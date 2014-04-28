@@ -72,8 +72,8 @@ function Overscroll() {
     }
 
     var lerp = 1;
-    if (fling_time < 100) {
-      lerp = fling_time / 100;
+    if (fling_time < 500) {
+      lerp = fling_time / 500;
     }
 
     console.log("lerp is " + lerp);
