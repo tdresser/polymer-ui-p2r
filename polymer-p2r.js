@@ -38,6 +38,8 @@ function Overscroll() {
       return;
     }
 
+    var target_pos = target === null ? 0 : target;
+
     var delta = time - prev_time;
     // If we don't have information on elapsed time, assume it's been 16 ms
     // since the last update.
@@ -51,20 +53,21 @@ function Overscroll() {
       d = this.MAX_OFFSET;
     }
 
-    var dist_to_target = target - d;
-    //      var spring = -gravity * (1 / (dist_to_target * dist_to_target + 1));
-    var spring = -gravity * (1 / (Math.abs(dist_to_target) + 1));
-    console.log("gravity " + gravity);
-    console.log("spring " + (-gravity * (1 / (dist_to_target * dist_to_target + 1))));
-    console.log("v " + v);
-    var a = 0;
-    a += gravity;
-    a += spring;
-    v += a * delta;
+    if (target_pos - d < 0) {
+      var dist_to_target = target - d;
+      //      var spring = -gravity * (1 / (dist_to_target * dist_to_target + 1));
+      var spring = -gravity * (1 / (Math.abs(dist_to_target) + 1));
+      console.log("gravity " + gravity);
+      console.log("spring " + (-gravity * (1 / (dist_to_target * dist_to_target + 1))));
+      console.log("v " + v);
+      var a = 0;
+      a += spring;
+      a += gravity;
+      v += a * delta;
+      d += v * delta;
+    }
 
-    d += v * delta;
-
-    if (target !== null && target - d > 1) {
+    if (target_pos - d > 1) {
       console.log("reset");
       v = 0;
       d = target;
