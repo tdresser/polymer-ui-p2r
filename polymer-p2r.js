@@ -170,7 +170,7 @@ Polymer('polymer-p2r', {
     window.FLING_VELOCITY_MULTIPLIER = 3;
 
     var absorbNextTouchMove = false;
-    var velocityCalculator = new VelocityCalculator(5);
+    var velocityCalculator = new VelocityCalculator(3);
 
     function getHeaderClassName(name) {
       return self.className;
