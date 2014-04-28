@@ -1,6 +1,5 @@
 function Overscroll() {
-  // Constants for tuning physics.
-  this.MAX_OFFSET = 1200;
+  this.MAX_OFFSET = 400;
 
   // Constants to configure spring physics
   this.SPRING_CONSTANT = 0.0005;
