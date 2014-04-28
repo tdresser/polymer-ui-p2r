@@ -64,7 +64,7 @@ function Overscroll() {
       d = this.MAX_OFFSET;
     }
 
-    var a = -this.SPRING_CONSTANT * dist_to_target - this.DAMPING * v;
+    var a = -this.SPRING_CONSTANT * (target - d) - this.DAMPING * v;
     v += a * delta;
     d += v * delta;
 
