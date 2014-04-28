@@ -1,8 +1,11 @@
 function Overscroll() {
   // Constants for tuning physics.
   this.MAX_OFFSET = 1200;
-//  this.GRAVITY = -0.18;
 
+  // Only used during fling, on the way up.
+  this.GRAVITY = -0.0008;
+
+  // Constants to configure spring physics when approaching target.
   this.SPRING_CONSTANT = 0.0005;
   this.DAMPING = 0.05;
 
@@ -68,7 +71,7 @@ function Overscroll() {
     if (v < 0) {
       a = this.SPRING_CONSTANT * (target - d) - this.DAMPING * v;
     } else {
-      a = this.SPRING_CONSTANT * (target - d);
+      a = this.GRAVITY;
     }
     v += a * delta;
     d += v * delta;
