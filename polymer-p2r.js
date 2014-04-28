@@ -3,8 +3,8 @@ function Overscroll() {
   this.MAX_OFFSET = 1200;
 //  this.GRAVITY = -0.18;
 
-  this.SPRING_CONSTANT = 0.0000001;
-  this.DAMPING = 1;
+  this.SPRING_CONSTANT = 0.0005;
+  this.DAMPING = 0.05;
 
   var self = this;
   var d = 0;
@@ -64,7 +64,12 @@ function Overscroll() {
       d = this.MAX_OFFSET;
     }
 
-    var a = this.SPRING_CONSTANT * (target - d) - this.DAMPING * v;
+    var a = 0;
+    if (v > 0) {
+      a = this.SPRING_CONSTANT * (target - d) - this.DAMPING * v;
+    } else {
+      a = this.SPRING_CONSTANT * (target - d);
+    }
     v += a * delta;
     d += v * delta;
 
