@@ -15,6 +15,8 @@ function Overscroll() {
   var target = null;
   var prev_time = 0;
 
+  var fling_time = 0;
+
   // Only used for tweaking via developer console.
   this.setParms = function(k, b) {
     this.SPRING_CONSTANT = k;
@@ -28,6 +30,7 @@ function Overscroll() {
   }
 
   this.setVelocity = function(vel) {
+    fling_time = 0;
     v = vel;
   }
 
@@ -52,6 +55,10 @@ function Overscroll() {
       return;
     }
 
+    if (target === null) {
+      fling_time += delta;
+    }
+
     var target_pos = target === null ? 0 : target;
 
     var delta = time - prev_time;
@@ -67,13 +74,15 @@ function Overscroll() {
       d = this.MAX_OFFSET;
     }
 
-    var a = this.SPRING_CONSTANT * (target - d) - this.DAMPING * v;
-    if (v > 0) {
-      a = this.GRAVITY;
+    var lerp = 1;
+    if (fling_time < 100) {
+      lerp = fling_step / 100;
     }
+
+    var a = lerp * this.SPRING_CONSTANT * (target - d) - this.DAMPING * v;
+
     v += a * delta;
     d += v * delta;
-
 
 //    console.log("GRAVITY " + this.GRAVITY);
 //    console.log("spring " + spring);
