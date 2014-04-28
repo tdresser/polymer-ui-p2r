@@ -56,6 +56,7 @@ function Overscroll() {
     var spring = -gravity * (1 / (Math.abs(dist_to_target) + 1));
     console.log("gravity " + gravity);
     console.log("spring " + (-gravity * (1 / (dist_to_target * dist_to_target + 1))));
+    console.log("v " + v);
     var a = 0;
     a += gravity;
     a += spring;
@@ -63,6 +64,7 @@ function Overscroll() {
     d += v * delta;
 
     if (target !== null && target - d > 1) {
+      console.log("reset");
       v = 0;
       d = target;
       target = null;
@@ -70,6 +72,7 @@ function Overscroll() {
   }
 
   this.setOffset = function(o) {
+    console.log("reset");
     target = null;
     d = o;
     v = 0;
