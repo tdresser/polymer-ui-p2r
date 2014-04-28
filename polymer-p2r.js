@@ -73,8 +73,8 @@ function Overscroll() {
       console.log("distance is " + (d - target));
       // Smoothly switch between using gravity model and spring model.
       var lerp = 1;
-      if (v < 100000000000) {
-         lerp = (d - target) / 100000000000;
+      if (v < 100) {
+         lerp = (d - target) / 100;
         console.log("LERP IS " + lerp);
       }
       console.log("before " + a);
