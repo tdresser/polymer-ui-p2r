@@ -9,6 +9,7 @@ function Overscroll() {
   var prev_time = 0;
 
   this.setTarget = function(t) {
+    console.log("setTarget");
     target = t;
     v = 0;
   }
@@ -76,7 +77,7 @@ function Overscroll() {
   }
 
   this.setOffset = function(o) {
-    console.log("reset");
+    console.log("reset by setOffset");
     target = null;
     d = o;
     v = 0;
@@ -186,7 +187,6 @@ Polymer('polymer-p2r', {
         requestAnimationFrame(onAnimationFrame);
       }
     }
-
 
     function isP2rVisible() {
       return scroller.scrollTop <= overscroll.getOffset();
