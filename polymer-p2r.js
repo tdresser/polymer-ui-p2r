@@ -1,7 +1,7 @@
 function Overscroll() {
   this.MAX_OFFSET = 400;
   var self = this;
-  var GRAVITY = -0.015;
+  var GRAVITY = -0.3;
   var d = 0;
   var v = 0;
   var target = null;
