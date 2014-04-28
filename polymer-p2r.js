@@ -81,7 +81,7 @@ function Overscroll() {
 
     console.log("lerp is " + lerp);
 
-    var a = lerp * this.SPRING_CONSTANT * (target - d) - this.DAMPING * v;
+    var a = lerp * (this.SPRING_CONSTANT * (target - d) - this.DAMPING * v);
 
     v += a * delta;
     d += v * delta;
