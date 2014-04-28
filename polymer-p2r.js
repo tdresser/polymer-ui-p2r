@@ -79,7 +79,7 @@ function Overscroll() {
     console.log("lerp is " + lerp);
     console.log("fling time " + fling_time);
 
-    var a = lerp * (this.SPRING_CONSTANT * (target - d) - this.DAMPING * v);
+    var a = lerp * lerp * (this.SPRING_CONSTANT * (target - d) - this.DAMPING * v);
 
     v += a * delta;
     d += v * delta;
