@@ -54,7 +54,13 @@ function Overscroll() {
       d = this.MAX_OFFSET;
     }
 
-    if (target_pos - d < 0) {
+    if (target_pos - d > 1) {
+      console.log("reset");
+      v = 0;
+      d = target;
+      target = null;
+    }
+    else { //if (target_pos - d < 0) {
       var dist_to_target = target - d;
       //      var spring = -gravity * (1 / (dist_to_target * dist_to_target + 1));
       var spring = -gravity * (1 / (Math.abs(dist_to_target) + 1));
@@ -66,13 +72,6 @@ function Overscroll() {
       a += gravity;
       v += a * delta;
       d += v * delta;
-    }
-
-    if (target_pos - d > 1) {
-      console.log("reset");
-      v = 0;
-      d = target;
-      target = null;
     }
   }
 
