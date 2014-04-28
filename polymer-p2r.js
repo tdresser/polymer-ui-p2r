@@ -65,7 +65,7 @@ function Overscroll() {
     }
 
     var a = 0;
-    if (v > 0) {
+    if (v < 0) {
       a = this.SPRING_CONSTANT * (target - d) - this.DAMPING * v;
     } else {
       a = this.SPRING_CONSTANT * (target - d);
