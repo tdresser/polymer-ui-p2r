@@ -73,7 +73,7 @@ function Overscroll() {
     console.log("d " + d);
     console.log("dist_to_target " + dist_to_target);
 
-    if (target_pos - d > 1) {
+    if (target_pos - d > -1) {
       console.log("reset");
       v = 0;
       d = target;
