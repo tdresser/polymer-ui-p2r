@@ -68,6 +68,7 @@ function Overscroll() {
     v += a * delta;
     d += v * delta;
 
+
 //    console.log("GRAVITY " + this.GRAVITY);
 //    console.log("spring " + spring);
     console.log("a " + a);
