@@ -22,7 +22,6 @@ function Overscroll() {
   }
 
   this.setTarget = function(t) {
-    console.log("setTarget");
     target = t;
     v = 0;
     fling_time = null;
@@ -78,24 +77,13 @@ function Overscroll() {
       lerp = fling_time / 500;
     }
 
-    console.log("lerp is " + lerp);
-    console.log("fling time " + fling_time);
-    console.log("delta is " + delta);
-
     var a = Math.pow(lerp, this.SPRING_LERP_POW) *
         (this.SPRING_CONSTANT * (target - d) - this.DAMPING * v);
 
     v += a * delta;
     d += v * delta;
 
-//    console.log("spring " + spring);
-    console.log("a " + a);
-    console.log("v " + v);
-    console.log("d " + d);
-//    console.log("dist_to_target " + dist_to_target);
-
     if (target_pos - d > -1 && v <= 0) {
-      console.log("reset");
       v = 0;
       d = target;
       target = null;
