@@ -1,11 +1,10 @@
 function Overscroll() {
   this.MAX_OFFSET = 400;
   var self = this;
+  var GRAVITY = -0.005;
   var d = 0;
   var v = 0;
-  var gravity = -0.005;
   var target = null;
-  var step = 1;
   var prev_time = 0;
 
   this.setTarget = function(t) {
@@ -56,7 +55,7 @@ function Overscroll() {
 
     var dist_to_target = target - d;
     //      var spring = -gravity * (1 / (dist_to_target * dist_to_target + 1));
-    var spring = -gravity * (1 / (Math.abs(dist_to_target) + 1));
+    var spring = -GRAVITY * (1 / (Math.abs(dist_to_target) + 1));
 
     var a = 0;
     a += spring;
@@ -76,6 +75,7 @@ function Overscroll() {
       v = 0;
       d = target;
       target = null;
+      prev_time = 0;
     }
   }
 
