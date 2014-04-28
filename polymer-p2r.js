@@ -3,7 +3,7 @@ function Overscroll() {
   var self = this;
   var d = 0;
   var v = 0;
-  var gravity = -0.01;
+  var gravity = -0.02;
   var target = null;
   var step = 1;
   var prev_time = 0;
