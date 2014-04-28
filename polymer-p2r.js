@@ -83,12 +83,12 @@ function Overscroll() {
     }
     d += v * delta;
 
-    console.log("GRAVITY " + this.GRAVITY);
-    console.log("spring " + spring);
-    console.log("a " + a);
-    console.log("v " + v);
-    console.log("d " + d);
-    console.log("dist_to_target " + dist_to_target);
+//    console.log("GRAVITY " + this.GRAVITY);
+//    console.log("spring " + spring);
+//    console.log("a " + a);
+//    console.log("v " + v);
+//    console.log("d " + d);
+//    console.log("dist_to_target " + dist_to_target);
 
     if (target_pos - d > -1 && v <= 0) {
       console.log("reset");
@@ -290,10 +290,12 @@ Polymer('polymer-p2r', {
       var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
 
       if (scroller.scrollTop > 10) {
+        console.log("Abort fling");
         return;
       }
 
       if (fingersDown == 0) {
+        console.log("FLING " + vel)
         overscroll.setTarget(0);
         overscroll.setVelocity(vel);
         scheduleUpdate();
