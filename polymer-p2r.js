@@ -71,15 +71,15 @@ function Overscroll() {
         (1 / (dist_to_target * dist_to_target + 1));
 
     var a = 0;
-    if (v > 0) {
+//    if (v > 0) {
       a += spring;
-    }
+//    }
     a += this.GRAVITY;
     v += a * delta;
 
-    if (v > 0) {
+//    if (v > 0) {
       v *= Math.pow(this.FRICTION, delta);
-    }
+//    }
     d += v * delta;
 
     console.log("GRAVITY " + this.GRAVITY);
@@ -89,7 +89,7 @@ function Overscroll() {
     console.log("d " + d);
     console.log("dist_to_target " + dist_to_target);
 
-    if (target_pos - d > -1) {
+    if (target_pos - d > -1 && v <= 0) {
       console.log("reset");
       v = 0;
       d = target;
