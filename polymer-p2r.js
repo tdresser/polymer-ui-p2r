@@ -99,7 +99,6 @@ function Overscroll() {
   }
 
   this.setOffset = function(o) {
-    console.log("reset by setOffset");
     target = null;
     d = o;
     v = 0;
