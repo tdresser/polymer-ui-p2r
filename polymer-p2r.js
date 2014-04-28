@@ -3,11 +3,8 @@ function Overscroll() {
   this.MAX_OFFSET = 1200;
 //  this.GRAVITY = -0.18;
 
-  this.GRAVITY = -0.0008;
-  this.FRICTION = 1;
-  this.SPRING_SCALE = 50;
-  this.SPRING_FORCE = 0.96;
-  this.SPRING_POW = 0.5;
+  this.SPRING_CONSTANT = 1;
+  this.DAMPING = 1;
 
   var self = this;
   var d = 0;
@@ -16,11 +13,9 @@ function Overscroll() {
   var prev_time = 0;
 
   // Only used for tweaking via developer console.
-  this.setParms = function(g, f, s, x) {
-    this.GRAVITY = g;
-    this.FRICTION = f;
-    this.SPRING_SCALE = s;
-    this.SPRING_FORCE = x;
+  this.setParms = function(k, b) {
+    this.SPRING_CONSTANT = k;
+    this.DAMPING = b;
   }
 
   this.setTarget = function(t) {
@@ -69,27 +64,15 @@ function Overscroll() {
       d = this.MAX_OFFSET;
     }
 
-    var dist_to_target = Math.abs((target - d) / this.SPRING_SCALE);
-    var spring = -this.SPRING_FORCE * this.GRAVITY *
-        (1 / (Math.pow(dist_to_target, this.SPRING_POW) + 1));
-
-    var a = 0;
-    if (v < 0) {
-      a -= spring * v;
-    }
-    a += this.GRAVITY;
+    var a = -this.SPRING_CONSTANT * dist_to_target - this.DAMPING * v;
     v += a * delta;
-
-    if (v < 0) {
-      v *= Math.pow(this.FRICTION, delta);
-    }
     d += v * delta;
 
 //    console.log("GRAVITY " + this.GRAVITY);
 //    console.log("spring " + spring);
-//    console.log("a " + a);
-//    console.log("v " + v);
-//    console.log("d " + d);
+    console.log("a " + a);
+    console.log("v " + v);
+    console.log("d " + d);
 //    console.log("dist_to_target " + dist_to_target);
 
     if (target_pos - d > -1 && v <= 0) {
