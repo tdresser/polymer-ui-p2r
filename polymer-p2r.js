@@ -61,7 +61,7 @@ function Overscroll() {
     a += spring;
     a += GRAVITY;
     v += a * delta;
-    v *= Math.pow(0.999, delta);
+    v *= Math.pow(0.99, delta);
     d += v * delta;
 
     console.log("GRAVITY " + GRAVITY);
