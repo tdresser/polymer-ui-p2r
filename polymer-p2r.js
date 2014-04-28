@@ -61,7 +61,7 @@ function Overscroll() {
       console.log("down " + gravity);
       var a = 0;
       a += gravity;
-      a += 100 / (dist_to_target * dist_to_target + 1);
+      a += 0.02 * ( 1 / (dist_to_target * dist_to_target + 1));
       v += a * delta;
       d += v * delta;
     }
