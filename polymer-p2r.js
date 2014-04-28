@@ -26,6 +26,7 @@ function Overscroll() {
     target = t;
     v = 0;
     fling_time = null;
+    prev_time = 0;
   }
 
   this.setVelocity = function(vel) {
@@ -104,6 +105,7 @@ function Overscroll() {
 
   this.setOffset = function(o) {
     fling_time = Number.MAX_VALUE;
+    prev_time = 0;
     target = null;
     d = o;
     v = 0;
