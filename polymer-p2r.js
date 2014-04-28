@@ -3,7 +3,7 @@ function Overscroll() {
   var self = this;
   var d = 0;
   var v = 0;
-  var base_a = 0.01;
+  var gravity = 0.01;
   var target = null;
   var step = 1;
   var prev_time = 0;
@@ -35,6 +35,8 @@ function Overscroll() {
 
   this.step = function(time) {
     var delta = time - prev_time;
+    // If we don't have information on elapsed time, assume it's been 16 ms
+    // since the last update.
     if (prev_time === 0) {
       delta = 16;
     }
@@ -54,21 +56,10 @@ function Overscroll() {
       d = target;
       target = null;
     } else {
-      var a = base_a;
-      if (target !== null) {
-        a = -Math.abs(base_a * (target - d)/1000.0);
-      }
+      var a = gravity;
       v += (a * delta);
       console.log("v " + v);
-      var slow_bounds = 50;
-      if (Math.abs(target - d) < slow_bounds && v < 0) {
-        var scale = Math.abs(target - d) / slow_bounds;
-        console.log("Scale is " + scale);
-        scale *= scale;
-        d += v * delta * scale;
-      } else {
-        d += v * delta;
-      }
+      d += v * delta;
     }
   }
 
