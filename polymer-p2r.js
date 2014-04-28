@@ -55,13 +55,13 @@ function Overscroll() {
 
     var dist_to_target = target - d;
     //      var spring = -GRAVITY * (1 / (dist_to_target * dist_to_target + 1));
-    var spring = -2 * GRAVITY * (1 / (Math.abs(dist_to_target / 100) + 1));
+    var spring = -1 * GRAVITY * (1 / (Math.abs(dist_to_target / 100) + 1));
 
     var a = 0;
     a += spring;
     a += GRAVITY;
     v += a * delta;
-    v *= Math.pow(0.99999, delta);
+    v *= Math.pow(0.9999, delta);
     d += v * delta;
 
     console.log("GRAVITY " + GRAVITY);
