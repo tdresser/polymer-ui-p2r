@@ -66,8 +66,9 @@ function Overscroll() {
 
     console.log("gravity " + gravity);
     console.log("spring " + (-gravity * (1 / (dist_to_target * dist_to_target + 1))));
-    console.log("d " + d);
+    console.log("a " + a);
     console.log("v " + v);
+    console.log("d " + d);
     console.log("dist_to_target " + dist_to_target);
 
     if (target_pos - d > 1) {
