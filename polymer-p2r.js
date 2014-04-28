@@ -1,15 +1,18 @@
 function Overscroll() {
+  // Constants for tuning physics.
   this.MAX_OFFSET = 400;
   this.GRAVITY = -0.18;
   this.FRICTION = 0.93;
   this.SPRING_SCALE = 50;
-  this.SPRING_FORCE = 0.8;
+  this.SPRING_FORCE = 0.96;
+
   var self = this;
   var d = 0;
   var v = 0;
   var target = null;
   var prev_time = 0;
 
+  // Only used for tweaking via developer console.
   this.setParms = function(g, f, s, x) {
     this.GRAVITY = g;
     this.FRICTION = f;
@@ -156,7 +159,11 @@ Polymer('polymer-p2r', {
     var loadingOffset = 150;
     var fingersDown = 0;
     var overscroll = new Overscroll();
+
+    // expose for access via developer console.
     window.overscroll = overscroll;
+    window.FLING_VELOCITY_MULTIPLIER = 1;
+
     var absorbNextTouchMove = false;
     var velocityCalculator = new VelocityCalculator(5);
 
@@ -275,7 +282,7 @@ Polymer('polymer-p2r', {
     function onScrollEvent(e) {
       velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
 
-      var vel = -velocityCalculator.getVelocity() / 3;
+      var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
 
       if (scroller.scrollTop > 10) {
         return;
