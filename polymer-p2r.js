@@ -2,12 +2,11 @@ function Overscroll() {
   // Constants for tuning physics.
   this.MAX_OFFSET = 1200;
 
-  // Only used during fling, on the way up.
-  this.GRAVITY = -0.0008;
-
   // Constants to configure spring physics when approaching target.
   this.SPRING_CONSTANT = 0.0005;
   this.DAMPING = 0.05;
+
+  this.SPRING_LERP_POW = 2;
 
   var self = this;
   var d = 0;
@@ -79,12 +78,12 @@ function Overscroll() {
     console.log("lerp is " + lerp);
     console.log("fling time " + fling_time);
 
-    var a = lerp * lerp * (this.SPRING_CONSTANT * (target - d) - this.DAMPING * v);
+    var a = Math.pow(lerp, this.SPRING_LERP_POW) *
+        (this.SPRING_CONSTANT * (target - d) - this.DAMPING * v);
 
     v += a * delta;
     d += v * delta;
 
-//    console.log("GRAVITY " + this.GRAVITY);
 //    console.log("spring " + spring);
     console.log("a " + a);
     console.log("v " + v);
