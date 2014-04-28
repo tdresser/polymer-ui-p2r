@@ -57,7 +57,7 @@ function Overscroll() {
       target = null;
     } else {
       var a = gravity;
-      v += (a * delta;
+      v += a * delta;
       d += v * delta;
       console.log("d " + d);
     }
