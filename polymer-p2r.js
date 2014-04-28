@@ -164,6 +164,7 @@ Polymer('polymer-p2r', {
     window.FLING_VELOCITY_MULTIPLIER = 1;
 
     var absorbNextTouchMove = false;
+    var isFirstTouchMove = false;
     var velocityCalculator = new VelocityCalculator(3);
 
     function getHeaderClassName(name) {
@@ -243,6 +244,7 @@ Polymer('polymer-p2r', {
     }
 
     scroller.addEventListener('touchstart', function(e) {
+      isFirstTouchMove = true;
       lastY = e.touches[0].screenY + scroller.scrollTop;
       pullStartY = lastY;
       fingersDown++;
@@ -256,7 +258,7 @@ Polymer('polymer-p2r', {
       if (absorbNextTouchMove) {
         pullStartY = e.touches[0].screenY - overscroll.getOffset();
         absorbNextTouchMove = false;
-        e.preventDefault();
+        //e.preventDefault();
         return;
       }
 
@@ -270,9 +272,11 @@ Polymer('polymer-p2r', {
         return;
       }
 
-      if (offset > 0) {
+      if (offset > 0 && !isFirstTouchMove) {
         e.preventDefault();
       }
+
+      isFirstTouchMove = false;
 
       overscroll.setOffset(offset);
       scheduleUpdate();
