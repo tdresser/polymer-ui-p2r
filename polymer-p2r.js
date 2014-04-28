@@ -1,7 +1,7 @@
 function Overscroll() {
   this.MAX_OFFSET = 400;
   var self = this;
-  var GRAVITY = -0.3;
+  var GRAVITY = -0.2;
   var d = 0;
   var v = 0;
   var target = null;
@@ -148,7 +148,6 @@ Polymer('polymer-p2r', {
     var overscroll = new Overscroll();
     var absorbNextTouchMove = false;
     var velocityCalculator = new VelocityCalculator(5);
-
 
     function getHeaderClassName(name) {
       return self.className;
