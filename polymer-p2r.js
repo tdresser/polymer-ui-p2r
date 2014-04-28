@@ -54,17 +54,17 @@ function Overscroll() {
     }
 
     var dist_to_target = target - d;
-    //      var spring = -gravity * (1 / (dist_to_target * dist_to_target + 1));
+    //      var spring = -GRAVITY * (1 / (dist_to_target * dist_to_target + 1));
     var spring = -GRAVITY * (1 / (Math.abs(dist_to_target) + 1));
 
     var a = 0;
     a += spring;
-    a += gravity;
+    a += GRAVITY;
     v += a * delta;
     d += v * delta;
 
-    console.log("gravity " + gravity);
-    console.log("spring " + (-gravity * (1 / (dist_to_target * dist_to_target + 1))));
+    console.log("GRAVITY " + GRAVITY);
+    console.log("spring " + (-GRAVITY * (1 / (dist_to_target * dist_to_target + 1))));
     console.log("a " + a);
     console.log("v " + v);
     console.log("d " + d);
