@@ -75,6 +75,7 @@ function Overscroll() {
       var lerp = 1;
       if (v < 100000000000) {
          lerp = (d - target) / 100000000000;
+        console.log("LERP IS " + lerp);
       }
       console.log("before " + a);
       console.log("lerp a " + a * lerp);
