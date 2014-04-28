@@ -65,9 +65,7 @@ function Overscroll() {
     }
 
     prev_time = time;
-    if (target === null) {
-      fling_time += delta;
-    }
+    fling_time += delta;
 
     if (d > this.MAX_OFFSET) {
       d = this.MAX_OFFSET;
@@ -103,6 +101,7 @@ function Overscroll() {
   }
 
   this.setOffset = function(o) {
+    fling_time = 100000000;
     target = null;
     d = o;
     v = 0;
