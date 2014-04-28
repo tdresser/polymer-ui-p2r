@@ -25,6 +25,7 @@ function Overscroll() {
     console.log("setTarget");
     target = t;
     v = 0;
+    fling_time = null;
   }
 
   this.setVelocity = function(vel) {
