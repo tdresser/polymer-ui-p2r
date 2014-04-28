@@ -2,10 +2,11 @@ function Overscroll() {
   // Constants for tuning physics.
   this.MAX_OFFSET = 400;
 //  this.GRAVITY = -0.18;
-  this.GRAVITY = -0.15;
-  this.FRICTION = 0.93;
+  this.GRAVITY = -0.0008;
+  this.FRICTION = 1;
   this.SPRING_SCALE = 50;
   this.SPRING_FORCE = 0.96;
+  this.SPRING_POW = 0.5;
 
   var self = this;
   var d = 0;
@@ -67,9 +68,9 @@ function Overscroll() {
       d = this.MAX_OFFSET;
     }
 
-    var dist_to_target = (target - d) / this.SPRING_SCALE;
+    var dist_to_target = Math.abs((target - d) / this.SPRING_SCALE);
     var spring = -this.SPRING_FORCE * this.GRAVITY *
-        (1 / (dist_to_target * dist_to_target + 1));
+        (1 / (Math.pow(dist_to_target, this.SPRING_POW) + 1));
 
     var a = 0;
     if (v < 0) {
@@ -167,7 +168,7 @@ Polymer('polymer-p2r', {
 
     // expose for access via developer console.
     window.overscroll = overscroll;
-    window.FLING_VELOCITY_MULTIPLIER = 3;
+    window.FLING_VELOCITY_MULTIPLIER = 1;
 
     var absorbNextTouchMove = false;
     var velocityCalculator = new VelocityCalculator(3);
