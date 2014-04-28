@@ -68,10 +68,16 @@ function Overscroll() {
     }
 
     var a = 0;
-    if (v < 0) {
-      a = this.SPRING_CONSTANT * (target - d) - this.DAMPING * v;
-    } else {
-      a = this.GRAVITY;
+    a = this.SPRING_CONSTANT * (target - d) - this.DAMPING * v;
+
+    if (v > 0) {
+      console.log("distance is " + (target - d));
+      // Smoothly switch between using gravity model and spring model.
+      var lerp = 1;
+      if (target - d < 20) {
+         lerp = (target - d) / 20;
+      }
+      a = a * lerp + (1 - lerp) * this.GRAVITY;
     }
     v += a * delta;
     d += v * delta;
