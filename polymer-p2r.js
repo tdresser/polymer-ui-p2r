@@ -71,7 +71,9 @@ function Overscroll() {
         (1 / (dist_to_target * dist_to_target + 1));
 
     var a = 0;
-    a += spring;
+    if (v > 0) {
+      a += spring;
+    }
     a += this.GRAVITY;
     v += a * delta;
     v *= Math.pow(this.FRICTION, delta);
