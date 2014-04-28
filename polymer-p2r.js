@@ -74,7 +74,7 @@ function Overscroll() {
       // Smoothly switch between using gravity model and spring model.
       var lerp = 1;
       if (d - target < 20) {
-         lerp = (d - target) / 20;
+         lerp = 1 - (d - target) / 20;
       }
       console.log("before " + a);
       console.log("lerp a " + a * lerp);
