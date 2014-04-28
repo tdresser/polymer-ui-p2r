@@ -148,6 +148,7 @@ Polymer('polymer-p2r', {
     var loadingOffset = 150;
     var fingersDown = 0;
     var overscroll = new Overscroll();
+    window.overscroll = overscroll;
     var absorbNextTouchMove = false;
     var velocityCalculator = new VelocityCalculator(5);
 
