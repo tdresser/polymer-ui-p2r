@@ -9,6 +9,8 @@ function Overscroll() {
   this.SPRING_CONSTANT = 0.0005;
   this.DAMPING = 0.05;
 
+  this.LERP_THRESHOLD = 0.5;
+
   var self = this;
   var d = 0;
   var v = 0;
@@ -73,8 +75,8 @@ function Overscroll() {
       console.log("distance is " + (d - target));
       // Smoothly switch between using gravity model and spring model.
       var lerp = 1;
-      if (v < window.LERP_THRESHOLD) {
-         lerp = v / window.LERP_THRESHOLD;
+      if (v < this.LERP_THRESHOLD) {
+         lerp = v / this.LERP_THRESHOLD;
         console.log("LERP IS " + lerp);
       }
       console.log("before " + a);
