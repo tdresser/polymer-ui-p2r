@@ -70,6 +70,7 @@ function Overscroll() {
 
     if (d > this.MAX_OFFSET) {
       d = this.MAX_OFFSET;
+      v = 0;
     }
 
     var lerp = 1;
