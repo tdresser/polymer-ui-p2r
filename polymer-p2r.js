@@ -94,6 +94,7 @@ function Overscroll() {
     console.log("a " + a);
     console.log("v " + v);
     console.log("d " + d);
+    console.log("delta " + delta);
   }
 
   this.setOffset = function(o) {
