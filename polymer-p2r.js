@@ -202,7 +202,7 @@ Polymer('polymer-p2r', {
     function onAnimationFrame(time) {
       framePending = false;
       checkPulled();
-//      overscroll.step(time);
+      overscroll.step(time);
 
       if (overscroll.getOffset() <= 0) {
         console.log("Repair offset " + overscroll.getOffset());
@@ -235,7 +235,7 @@ Polymer('polymer-p2r', {
       return overscroll.getOffset() > 0;
     }
 
-/*    function finishPull(e) {
+    function finishPull(e) {
       fingersDown--;
 
       if (!isPulling() || fingersDown != 0 || !isP2rVisible()) {
@@ -258,7 +258,7 @@ Polymer('polymer-p2r', {
         overscroll.setTarget(Math.max(0, scroller.scrollTop));
         scheduleUpdate();
       }
-    }*/
+    }
 
     scroller.addEventListener('touchstart', function(e) {
       fingersDown++;
@@ -292,7 +292,7 @@ Polymer('polymer-p2r', {
 
 //    var prevScrollTop = 0;
 
-/*    function onScrollEvent(e) {
+    function onScrollEvent(e) {
       if(isPulling()) {
         return;
       }
@@ -326,7 +326,7 @@ Polymer('polymer-p2r', {
         overscroll.setVelocity(vel);
         scheduleUpdate();
       }
-    }*/
+    }
 
     scroller.addEventListener('scroll', onScrollEvent);
     scroller.addEventListener('touchcancel', finishPull);
