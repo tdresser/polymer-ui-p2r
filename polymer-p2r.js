@@ -209,7 +209,7 @@ Polymer('polymer-p2r', {
 //        scroller.scrollTop = -overscroll.getOffset();
 ////        pullStartY -= 2 * overscroll.getOffset();
 //        overscroll.setOffset(0);
-      }
+//      }
 //      translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
 //      translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
       translateY(scrollcontent, overscroll.getOffset());
