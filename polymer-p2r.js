@@ -166,7 +166,6 @@ Polymer('polymer-p2r', {
     var scrollcontent = self.$.scrollcontent;
     var framePending = false;
     var pullStartY = 0;
-    var lastY = 0;
     var loadingOffset = 150;
     var fingersDown = 0;
     var overscroll = new Overscroll();
@@ -205,11 +204,11 @@ Polymer('polymer-p2r', {
       checkPulled();
       overscroll.step(time);
 
-      if (overscroll.getOffset() <= 0) {
-        console.log("Repair offset " + overscroll.getOffset());
-        scroller.scrollTop = -overscroll.getOffset();
-        pullStartY -= 2 * overscroll.getOffset();
-        overscroll.setOffset(0);
+//      if (overscroll.getOffset() <= 0) {
+//        console.log("Repair offset " + overscroll.getOffset());
+//        scroller.scrollTop = -overscroll.getOffset();
+////        pullStartY -= 2 * overscroll.getOffset();
+//        overscroll.setOffset(0);
       }
 //      translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
 //      translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
@@ -267,18 +266,16 @@ Polymer('polymer-p2r', {
 
     scroller.addEventListener('touchmove', function(e) {
       if (isFirstTouchMove) {
-        lastY = e.touches[0].screenY + scroller.scrollTop - overscroll.getOffset();
-        pullStartY = lastY;
+        pullStartY = e.touches[0].screenY + scroller.scrollTop - overscroll.getOffset();
         isFirstTouchMove = false;
         e.preventDefault();
         return;
       }
 
-      var scrollDelta = lastY - e.touches[0].screenY;
-      var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
-      lastY = e.touches[0].screenY;
-
       var offset = e.touches[0].screenY - pullStartY;
+      console.log("offset " + offset);
+
+      var startingNewPull = !isPulling() && offset < 0;
 
       if(!startingNewPull && !isPulling()) {
         return;
