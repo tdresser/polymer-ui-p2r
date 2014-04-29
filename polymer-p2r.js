@@ -249,10 +249,11 @@ Polymer('polymer-p2r', {
       }
     }
 
+    var isFirstTouchMove = false;
+
     scroller.addEventListener('touchstart', function(e) {
-      lastY = e.touches[0].screenY + scroller.scrollTop;
-      pullStartY = lastY;
       fingersDown++;
+      isFirstTouchMove = true;
 
       if (isPulling()) {
         absorbNextTouchMove = true;
@@ -267,6 +268,10 @@ Polymer('polymer-p2r', {
         absorbNextTouchMove = false;
         e.preventDefault();
         return;
+      } else if (isFirstTouchMove) {
+        lastY = e.touches[0].screenY + scroller.scrollTop;
+        pullStartY = lastY;
+        isFirstTouchMove = false;
       }
 
       var scrollDelta = lastY - e.touches[0].screenY;
