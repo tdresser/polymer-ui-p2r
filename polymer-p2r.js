@@ -59,7 +59,7 @@ function Overscroll() {
 
     var target_pos = target === null ? 0 : target;
 
-    var delta = time - prev_time;
+    var delta = 16;//time - prev_time;
     // If we don't have information on elapsed time, assume it's been 30 ms
     // since the last update.
     if (prev_time === 0) {
@@ -198,7 +198,7 @@ Polymer('polymer-p2r', {
     function onAnimationFrame(time) {
       framePending = false;
       checkPulled();
-      overscroll.step(16/*time*/);
+      overscroll.step(time);
 
       if (overscroll.getOffset() <= 0) {
         console.log("Repair offset " + overscroll.getOffset());
