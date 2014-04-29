@@ -57,7 +57,7 @@ function Overscroll() {
     var target_pos = target === null ? 0 : target;
 
     var delta = time - prev_time;
-    // If we don't have information on elapsed time, assume it's been 16 ms
+    // If we don't have information on elapsed time, assume it's been 30 ms
     // since the last update.
     if (prev_time === 0) {
       delta = 30;
@@ -91,6 +91,8 @@ function Overscroll() {
       prev_time = 0;
     }
 
+    console.log("a " + a);
+    console.log("v " + v);
     console.log("d " + d);
   }
 
