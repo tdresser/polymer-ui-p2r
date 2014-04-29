@@ -62,7 +62,6 @@ function Overscroll() {
     if (prev_time === 0) {
       delta = 30;
     }
-    console.log("delta is " + delta);
 
     prev_time = time;
     if (fling_time !== null) {
