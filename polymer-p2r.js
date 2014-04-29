@@ -79,7 +79,7 @@ function Overscroll() {
     }
 
     var a = Math.pow(lerp, this.SPRING_LERP_POW) *
-        (this.SPRING_CONSTANT * (target - d) - this.DAMPING * v);
+        (this.SPRING_CONSTANT * (target - d)) - this.DAMPING * v;
 
     v += a * delta;
     d += v * delta;
