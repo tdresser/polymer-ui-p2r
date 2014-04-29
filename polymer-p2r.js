@@ -253,11 +253,9 @@ Polymer('polymer-p2r', {
     });
 
     scroller.addEventListener('touchmove', function(e) {
-      console.log("TM");
       if (absorbNextTouchMove) {
         pullStartY = e.touches[0].screenY - overscroll.getOffset();
         absorbNextTouchMove = false;
-        console.log("PREVENT A");
         e.preventDefault();
         return;
       }
@@ -273,7 +271,6 @@ Polymer('polymer-p2r', {
       }
 
       if (offset > 0) {
-        console.log("PREVENT B");
         e.preventDefault();
       }
 
