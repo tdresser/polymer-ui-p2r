@@ -1,5 +1,5 @@
 function Overscroll() {
-  this.MAX_OFFSET = 400;
+  this.MAX_OFFSET = 800;
 
   // Constants to configure spring physics
   this.SPRING_CONSTANT = 0.0005;
@@ -79,7 +79,7 @@ function Overscroll() {
     }
 
     var a = Math.pow(lerp, this.SPRING_LERP_POW) *
-        (this.SPRING_CONSTANT * (target - d)) - this.DAMPING * v;
+        (this.SPRING_CONSTANT * (target - d)) - lerp * this.DAMPING * v;
 
     v += a * delta;
     d += v * delta;
