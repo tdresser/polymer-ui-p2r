@@ -60,7 +60,7 @@ function Overscroll() {
     // If we don't have information on elapsed time, assume it's been 16 ms
     // since the last update.
     if (prev_time === 0) {
-      delta = 16;
+      delta = 30;
     }
     console.log("delta is " + delta);
 
