@@ -275,6 +275,11 @@ Polymer('polymer-p2r', {
       var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
       lastY = e.touches[0].screenY;
 
+
+      if (startingNewPull) {
+        pullStartY = lastY + scrollDelta;
+      }
+
       console.log("current y is " + e.touches[0].screenY);
       console.log("pullStartY " + pullStartY);
       var offset = e.touches[0].screenY - pullStartY;
