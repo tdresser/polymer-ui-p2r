@@ -91,9 +91,9 @@ function Overscroll() {
       prev_time = 0;
     }
 
-//    console.log("a " + a);
-//    console.log("d " + d);
-//    console.log("delta " + delta);
+    console.log("a " + a);
+    console.log("d " + d);
+    console.log("delta " + delta);
   }
 
   this.setOffset = function(o) {
