@@ -198,6 +198,7 @@ Polymer('polymer-p2r', {
       overscroll.step(time);
 
       if (overscroll.getOffset() <= 0) {
+        console.log("Repair offset");
         scroller.scrollTop = -overscroll.getOffset();
         overscroll.setOffset(0);
       }
@@ -282,6 +283,7 @@ Polymer('polymer-p2r', {
 
       isFirstTouchMove = false;
 
+      console.log("Set offset " + offset);
       overscroll.setOffset(offset);
       scheduleUpdate();
     });
