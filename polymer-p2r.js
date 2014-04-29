@@ -288,7 +288,9 @@ Polymer('polymer-p2r', {
 
       isFirstTouchMove = false;
 
-      console.log("Set offset " + (offset + scroller.scrollTop));
+      if (scroller.scrollTop !== 0) {
+        console.log("SET OFFSET " + (offset + scroller.scrollTop));
+      }
       overscroll.setOffset(offset + scroller.scrollTop);
       scheduleUpdate();
     });
