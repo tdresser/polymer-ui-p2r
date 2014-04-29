@@ -262,6 +262,7 @@ Polymer('polymer-p2r', {
     scroller.addEventListener('touchmove', function(e) {
       if (absorbNextTouchMove) {
         pullStartY = e.touches[0].screenY - overscroll.getOffset();
+        console.log("pullStartY " + pullStartY);
         absorbNextTouchMove = false;
         e.preventDefault();
         return;
@@ -271,7 +272,9 @@ Polymer('polymer-p2r', {
       var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
       lastY = e.touches[0].screenY;
 
+      console.log("current y is " + e.touches[0].screenY);
       var offset = e.touches[0].screenY - pullStartY;
+      console.log("offset " + offset);
 
       if(!startingNewPull && !isPulling()) {
         return;
