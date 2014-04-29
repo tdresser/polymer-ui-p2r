@@ -266,6 +266,7 @@ Polymer('polymer-p2r', {
         console.log("pullStartY " + pullStartY);
         console.log("overscroll offset " + overscroll.getOffset());
         absorbNextTouchMove = false;
+        isFirstTouchMove = false;
         e.preventDefault();
         return;
       } else if (isFirstTouchMove) {
@@ -278,10 +279,7 @@ Polymer('polymer-p2r', {
       var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
       lastY = e.touches[0].screenY;
 
-      console.log("current y is " + e.touches[0].screenY);
-      console.log("pullStartY " + pullStartY);
       var offset = e.touches[0].screenY - pullStartY;
-      console.log("offset " + offset);
 
       if(!startingNewPull && !isPulling()) {
         return;
@@ -291,9 +289,6 @@ Polymer('polymer-p2r', {
         e.preventDefault();
       }
 
-      isFirstTouchMove = false;
-
-      console.log("Set offset " + offset);
       overscroll.setOffset(offset);
       scheduleUpdate();
     });
