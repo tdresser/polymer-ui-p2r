@@ -59,7 +59,12 @@ function Overscroll() {
 
     var target_pos = target === null ? 0 : target;
 
+    // Use a hard coded delta for now, as Euler integration behaves badly when
+    // given timestamps which vary as much as the RAF timestamps due.
+    // TODO: integrate better (RK4? Do more Euler integration steps, with a
+    // fixed timestep, and interpolate between them?)
     var delta = 16;//time - prev_time;
+
     // If we don't have information on elapsed time, assume it's been 30 ms
     // since the last update.
     if (prev_time === 0) {
