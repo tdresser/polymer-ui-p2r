@@ -199,8 +199,7 @@ Polymer('polymer-p2r', {
 
       if (overscroll.getOffset() <= 0) {
         console.log("Repair offset " + overscroll.getOffset());
-        console.log(overscroll.getOffset());
-        scroller.scrollTop = overscroll.getOffset();
+        scroller.scrollTop = -overscroll.getOffset();
         overscroll.setOffset(0);
       }
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
@@ -251,8 +250,7 @@ Polymer('polymer-p2r', {
     }
 
     scroller.addEventListener('touchstart', function(e) {
-//      lastY = e.touches[0].screenY + scroller.scrollTop;
-      lastY = e.touches[0].screenY;
+      lastY = e.touches[0].screenY + scroller.scrollTop;
       pullStartY = lastY;
       fingersDown++;
 
@@ -275,11 +273,6 @@ Polymer('polymer-p2r', {
       var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
       lastY = e.touches[0].screenY;
 
-
-      if (startingNewPull) {
-        pullStartY = lastY + scrollDelta;
-      }
-
       console.log("current y is " + e.touches[0].screenY);
       console.log("pullStartY " + pullStartY);
       var offset = e.touches[0].screenY - pullStartY;
@@ -295,7 +288,7 @@ Polymer('polymer-p2r', {
 
       isFirstTouchMove = false;
 
-      console.log("Set offset " + offset);
+      console.log("Set offset " + offset - scroller.scrollTop);
       overscroll.setOffset(offset);
       scheduleUpdate();
     });
