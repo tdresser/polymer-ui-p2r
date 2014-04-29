@@ -264,6 +264,7 @@ Polymer('polymer-p2r', {
       if (absorbNextTouchMove) {
         pullStartY = e.touches[0].screenY - overscroll.getOffset();
         console.log("pullStartY " + pullStartY);
+        console.log("overscroll offset " + overscroll.getOffset());
         absorbNextTouchMove = false;
         e.preventDefault();
         return;
