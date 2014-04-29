@@ -274,6 +274,7 @@ Polymer('polymer-p2r', {
 
       var offset = e.touches[0].screenY - pullStartY;
       console.log("offset " + offset);
+      console.log("scrollTop " + scroller.scrollTop);
 
       if(!isPulling() && offset <= 0) {
         return;
