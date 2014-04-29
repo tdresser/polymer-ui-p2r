@@ -87,7 +87,7 @@ function Overscroll() {
         (this.SPRING_CONSTANT * (target - d));
     v += a * delta;
     var dampening = Math.pow(lerp, this.SPRING_LERP_POW) * this.DAMPING * v;
-    v -= damping;
+    v -= dampening;
     d += v * delta;
 
     console.log("a " + (this.SPRING_CONSTANT * (target - d)) + " - " + (this.DAMPING * v) + " = " + a + "\n\n");
