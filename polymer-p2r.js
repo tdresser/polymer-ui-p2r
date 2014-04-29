@@ -323,10 +323,10 @@ Polymer('polymer-p2r', {
         overscroll.setVelocity(vel);
         scheduleUpdate();
       }
-    }
+    }*/
 
     scroller.addEventListener('scroll', onScrollEvent);
     scroller.addEventListener('touchcancel', finishPull);
     scroller.addEventListener('touchend', finishPull);
-  }*/
+  }
 });
