@@ -251,7 +251,8 @@ Polymer('polymer-p2r', {
     }
 
     scroller.addEventListener('touchstart', function(e) {
-      lastY = e.touches[0].screenY + scroller.scrollTop;
+//      lastY = e.touches[0].screenY + scroller.scrollTop;
+      lastY = e.touches[0].screenY;
       pullStartY = lastY;
       fingersDown++;
 
