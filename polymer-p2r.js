@@ -205,12 +205,12 @@ Polymer('polymer-p2r', {
       checkPulled();
       overscroll.step(time);
 
-/*      if (overscroll.getOffset() <= 0) {
+      if (overscroll.getOffset() <= 0) {
         console.log("Repair offset " + overscroll.getOffset());
         scroller.scrollTop = -overscroll.getOffset();
-        pullStartY -= overscroll.getOffset();
+        pullStartY -= 2 * overscroll.getOffset();
         overscroll.setOffset(0);
-      }*/
+      }
 //      translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
 //      translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
       translateY(scrollcontent, overscroll.getOffset());
