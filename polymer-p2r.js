@@ -37,9 +37,14 @@ function Overscroll() {
   }
 
   this.addFriction = function(delta) {
-    return delta;
     if (delta < 0) {
       return delta;
+    }
+
+    if (delta < this.MAX_OFFSET) {
+      return delta;
+    } else {
+      return this.MAX_OFFSET
     }
 
     delta = delta/this.MAX_OFFSET;
