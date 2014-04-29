@@ -211,10 +211,8 @@ Polymer('polymer-p2r', {
 //        pullStartY = overscroll.getOffset();
         overscroll.setOffset(0);
       }
-//      translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
-//      translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
-      translateY(scrollcontent, overscroll.getOffset());
-      translateY(p2r, overscroll.getOffset() - p2r.clientHeight);
+      translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
+      translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
       if (!overscroll.reachedTarget()) {
         scheduleUpdate();
       }
