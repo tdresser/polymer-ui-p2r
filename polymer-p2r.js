@@ -269,11 +269,11 @@ Polymer('polymer-p2r', {
         return;
       }
 
-      var scrollDelta = lastY - e.touches[0].pageY;
+      var scrollDelta = lastY - e.touches[0].clientY;
       var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
       lastY = e.touches[0].pageY;
 
-      console.log("current y is " + e.touches[0].pageY);
+      console.log("current y is " + e.touches[0].clientY);
       console.log("pullStartY " + pullStartY);
       var offset = e.touches[0].pageY - pullStartY;
       console.log("offset " + offset);
