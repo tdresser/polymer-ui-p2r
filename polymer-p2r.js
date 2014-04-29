@@ -250,7 +250,7 @@ Polymer('polymer-p2r', {
     }
 
     scroller.addEventListener('touchstart', function(e) {
-      lastY = e.touches[0].pageY;
+      lastY = e.touches[0].screenY + scroller.scrollTop;
       pullStartY = lastY;
       fingersDown++;
 
@@ -261,7 +261,7 @@ Polymer('polymer-p2r', {
 
     scroller.addEventListener('touchmove', function(e) {
       if (absorbNextTouchMove) {
-        pullStartY = e.touches[0].pageY - overscroll.getOffset();
+        pullStartY = e.touches[0].screenY - overscroll.getOffset();
         console.log("pullStartY " + pullStartY);
         console.log("overscroll offset " + overscroll.getOffset());
         absorbNextTouchMove = false;
@@ -269,13 +269,13 @@ Polymer('polymer-p2r', {
         return;
       }
 
-      var scrollDelta = lastY - e.touches[0].clientY;
+      var scrollDelta = lastY - e.touches[0].screenY;
       var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
-      lastY = e.touches[0].pageY;
+      lastY = e.touches[0].screenY;
 
-      console.log("current y is " + e.touches[0].clientY);
+      console.log("current y is " + e.touches[0].screenY);
       console.log("pullStartY " + pullStartY);
-      var offset = e.touches[0].clientY - pullStartY;
+      var offset = e.touches[0].screenY - pullStartY;
       console.log("offset " + offset);
 
       if(!startingNewPull && !isPulling()) {
@@ -286,10 +286,10 @@ Polymer('polymer-p2r', {
         e.preventDefault();
       }
 
-      if (scroller.scrollTop !== 0) {
-        console.log("SET OFFSET " + (offset + scroller.scrollTop));
-      }
-      overscroll.setOffset(offset + scroller.scrollTop);
+      isFirstTouchMove = false;
+
+      console.log("Set offset " + offset);
+      overscroll.setOffset(offset);
       scheduleUpdate();
     });
 
