@@ -289,7 +289,7 @@ Polymer('polymer-p2r', {
       isFirstTouchMove = false;
 
       console.log("Set offset " + offset - scroller.scrollTop);
-      overscroll.setOffset(offset);
+      overscroll.setOffset(offset - scroller.scrollTop);
       scheduleUpdate();
     });
 
