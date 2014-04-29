@@ -78,7 +78,6 @@ function Overscroll() {
       lerp = fling_time / 500;
     }
 
-    console.log("a " + a);
     console.log("v " + v);
     console.log("d " + d);
 
@@ -86,6 +85,9 @@ function Overscroll() {
 
     var a = Math.pow(lerp, this.SPRING_LERP_POW) *
         (this.SPRING_CONSTANT * (target - d) - this.DAMPING * v);
+
+    console.log("a " + (this.SPRING_CONSTANT * (target - d)) + " - " + (this.DAMPING * v) + " = " + a);
+
     v += a * delta;
     d += v * delta;
 
