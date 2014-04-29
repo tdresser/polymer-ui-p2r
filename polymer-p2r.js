@@ -274,6 +274,7 @@ Polymer('polymer-p2r', {
       lastY = e.touches[0].screenY;
 
       console.log("current y is " + e.touches[0].screenY);
+      console.log("pullStartY " + pullStartY);
       var offset = e.touches[0].screenY - pullStartY;
       console.log("offset " + offset);
 
