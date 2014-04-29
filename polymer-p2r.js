@@ -293,7 +293,7 @@ Polymer('polymer-p2r', {
       // We want to tell if the next frame will fling into the overscroll
       // region. Overestimate the next frame time, and use that to guess if
       // we'll hit the overscroll region next frame.
-      var next_delta_estimate = 64 * vel;
+      var next_delta_estimate = 300 * vel;
       console.log("this delta was " + (prevScrollTop - scroller.scrollTop));
       prevScrollTop = scroller.scrollTop;
 
