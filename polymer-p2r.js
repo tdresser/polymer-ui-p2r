@@ -278,7 +278,7 @@ Polymer('polymer-p2r', {
       console.log("scrollTop " + scroller.scrollTop);
 
       if(!isPulling() && offset <= 0) {
-        pullStartY = e.touches[0].screenY - overscroll.getOffset();
+        pullStartY = e.touches[0].screenY + scroller.scrollTop - overscroll.getOffset();
         return;
       }
 
