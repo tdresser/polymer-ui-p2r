@@ -226,7 +226,7 @@ Polymer('polymer-p2r', {
       }
     }
 
-    function isP2rVisible() {
+/*    function isP2rVisible() {
       return scroller.scrollTop <= overscroll.getOffset();
     }
 
@@ -257,7 +257,7 @@ Polymer('polymer-p2r', {
         overscroll.setTarget(Math.max(0, scroller.scrollTop));
         scheduleUpdate();
       }
-    }
+    }*/
 
     scroller.addEventListener('touchstart', function(e) {
       fingersDown++;
@@ -289,7 +289,7 @@ Polymer('polymer-p2r', {
 
 //    var prevScrollTop = 0;
 
-    function onScrollEvent(e) {
+/*    function onScrollEvent(e) {
       if(isPulling()) {
         return;
       }
@@ -328,5 +328,5 @@ Polymer('polymer-p2r', {
     scroller.addEventListener('scroll', onScrollEvent);
     scroller.addEventListener('touchcancel', finishPull);
     scroller.addEventListener('touchend', finishPull);
-  }
+  }*/
 });
