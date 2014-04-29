@@ -45,7 +45,7 @@ function Overscroll() {
     if (delta > 1) {
       delta = 1;
     }
-    return this.MAX_OFFSET * (delta/2 - delta/2 * delta/2);
+    return 2 * this.MAX_OFFSET * (delta/2 - delta/2 * delta/2);
   }
 
   this.reachedTarget = function() {
