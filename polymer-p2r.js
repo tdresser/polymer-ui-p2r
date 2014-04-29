@@ -90,6 +90,8 @@ function Overscroll() {
       target = null;
       prev_time = 0;
     }
+
+    console.log("d " + d);
   }
 
   this.setOffset = function(o) {
