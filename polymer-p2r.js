@@ -281,6 +281,10 @@ Polymer('polymer-p2r', {
     });
 
     function onScrollEvent(e) {
+      if(isPulling()) {
+        return;
+      }
+
       velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
       var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
       console.log(scroller.scrollTop);
