@@ -78,20 +78,14 @@ function Overscroll() {
       lerp = fling_time / 500;
     }
 
-    console.log("v " + v);
-    console.log("d " + d);
-
-    console.log("delta " + delta);
-
     var a = Math.pow(lerp, this.SPRING_LERP_POW) *
         (this.SPRING_CONSTANT * (target - d));
     v += a * delta;
+    // Using the velocity after applying the acceleration due to the spring
+    // keeps the simulation more stable.
     var dampening = Math.pow(lerp, this.SPRING_LERP_POW) * this.DAMPING * v;
     v -= dampening;
     d += v * delta;
-
-    console.log("a " + (this.SPRING_CONSTANT * (target - d)) + " - " + (this.DAMPING * v) + " = " + a + "\n\n");
-
 
     if (target_pos - d > -1 && v <= 0) {
       v = 0;
