@@ -37,6 +37,7 @@ function Overscroll() {
   }
 
   this.addFriction = function(delta) {
+    return delta;
     if (delta < 0) {
       return delta;
     }
