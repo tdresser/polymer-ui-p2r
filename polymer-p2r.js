@@ -226,15 +226,15 @@ Polymer('polymer-p2r', {
       }
     }
 
-/*    function isP2rVisible() {
+    function isP2rVisible() {
       return scroller.scrollTop <= overscroll.getOffset();
     }
 
     function isPulling() {
-      return overscroll.getOffset() > 0.2;
+      return overscroll.getOffset() > 0;
     }
 
-    function finishPull(e) {
+/*    function finishPull(e) {
       fingersDown--;
 
       if (!isPulling() || fingersDown != 0 || !isP2rVisible()) {
