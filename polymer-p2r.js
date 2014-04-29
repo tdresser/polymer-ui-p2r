@@ -170,12 +170,12 @@ Polymer('polymer-p2r', {
     var loadingOffset = 150;
     var fingersDown = 0;
     var overscroll = new Overscroll();
+    var isFirstTouchMove = false;
 
     // expose for access via developer console.
     window.overscroll = overscroll;
     window.FLING_VELOCITY_MULTIPLIER = 1;
 
-    var absorbNextTouchMove = false;
     var velocityCalculator = new VelocityCalculator(3);
 
     function getHeaderClassName(name) {
@@ -259,30 +259,18 @@ Polymer('polymer-p2r', {
       }
     }
 
-    var isFirstTouchMove = false;
-
     scroller.addEventListener('touchstart', function(e) {
       fingersDown++;
       isFirstTouchMove = true;
-
-      if (isPulling()) {
-        absorbNextTouchMove = true;
-      }
     });
 
     scroller.addEventListener('touchmove', function(e) {
-      if (absorbNextTouchMove) {
-        pullStartY = e.touches[0].screenY - overscroll.getOffset();
-        console.log("pullStartY " + pullStartY);
-        console.log("overscroll offset " + overscroll.getOffset());
-        absorbNextTouchMove = false;
+      if (isFirstTouchMove) {
+        lastY = e.touches[0].screenY + scroller.scrollTop - overscroll.getOffset();
+        pullStartY = lastY;
         isFirstTouchMove = false;
         e.preventDefault();
         return;
-      } else if (isFirstTouchMove) {
-        lastY = e.touches[0].screenY + scroller.scrollTop;
-        pullStartY = lastY;
-        isFirstTouchMove = false;
       }
 
       var scrollDelta = lastY - e.touches[0].screenY;
