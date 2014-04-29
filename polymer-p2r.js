@@ -1,3 +1,6 @@
+// TODO: remove the one frame stutter when flinging in.
+// TODO: don't allow flinging past the bottom of the page when the header is up.
+
 function Overscroll() {
   this.MAX_OFFSET = 800;
 
