@@ -78,11 +78,9 @@ function Overscroll() {
       lerp = fling_time / 500;
     }
 
-//    var a = Math.pow(lerp, this.SPRING_LERP_POW) *
-//        (this.SPRING_CONSTANT * (target - d) - this.DAMPING * v);
     var a = Math.pow(lerp, this.SPRING_LERP_POW) *
-        (this.SPRING_CONSTANT * (target - d));
-
+        (this.SPRING_CONSTANT * (target - d) - this.DAMPING * v);
+    console.log("v " + v);
     v += a * delta;
     d += v * delta;
 
@@ -93,10 +91,9 @@ function Overscroll() {
       prev_time = 0;
     }
 
-    console.log("a " + a);
-    console.log("v " + v);
-    console.log("d " + d);
-    console.log("delta " + delta);
+//    console.log("a " + a);
+//    console.log("d " + d);
+//    console.log("delta " + delta);
   }
 
   this.setOffset = function(o) {
