@@ -198,7 +198,7 @@ Polymer('polymer-p2r', {
     function onAnimationFrame(time) {
       framePending = false;
       checkPulled();
-      overscroll.step(time);
+      overscroll.step(16/*time*/);
 
       if (overscroll.getOffset() <= 0) {
         console.log("Repair offset " + overscroll.getOffset());
