@@ -282,14 +282,19 @@ Polymer('polymer-p2r', {
 
     function onScrollEvent(e) {
       velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
+      var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
+      console.log(scroller.scrollTop);
+      var next_delta_estimate = 16 * vel;
 
-      if (scroller.scrollTop > 10) {
+      console.log("next delta " + next_delta_estimate);
+      console.log("scroll top " + scroller.scrollTop);
+
+      if (scroller.scrollTop > next_delta_estimate) {
         console.log("Abort fling");
         return;
       }
 
       if (fingersDown == 0) {
-        var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
         console.log("FLING " + vel)
         overscroll.setTarget(0);
         overscroll.setVelocity(vel);
