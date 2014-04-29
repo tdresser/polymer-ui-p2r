@@ -41,12 +41,6 @@ function Overscroll() {
       return delta;
     }
 
-    if (delta < this.MAX_OFFSET) {
-      return delta;
-    } else {
-      return this.MAX_OFFSET
-    }
-
     delta = delta/this.MAX_OFFSET;
     if (delta > 1) {
       delta = 1;
@@ -216,8 +210,10 @@ Polymer('polymer-p2r', {
         scroller.scrollTop = -overscroll.getOffset();
         overscroll.setOffset(0);
       }
-      translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
-      translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
+//      translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
+//      translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
+      translateY(scrollcontent, overscroll.getOffset());
+      translateY(p2r, overscroll.getOffset() - p2r.clientHeight);
       if (!overscroll.reachedTarget()) {
         scheduleUpdate();
       }
