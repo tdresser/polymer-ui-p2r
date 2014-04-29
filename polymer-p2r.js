@@ -206,8 +206,9 @@ Polymer('polymer-p2r', {
 
       if (overscroll.getOffset() <= 0) {
         console.log("Repair offset " + overscroll.getOffset());
+        console.log("current scrollTop is " + scroller.scrollTop);
         scroller.scrollTop = -overscroll.getOffset();
-//        pullStartY -= 2 * overscroll.getOffset();
+        pullStartY -= overscroll.getOffset();
         overscroll.setOffset(0);
       }
 //      translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
