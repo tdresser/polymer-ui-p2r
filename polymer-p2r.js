@@ -2,8 +2,8 @@ function Overscroll() {
   this.MAX_OFFSET = 800;
 
   // Constants to configure spring physics
-  this.SPRING_CONSTANT = 0.0003;
-  this.DAMPING = 0.07;
+  this.SPRING_CONSTANT = 0.0005;
+  this.DAMPING = 0.5;
   this.SPRING_LERP_POW = 4;
 
   var self = this;
