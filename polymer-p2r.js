@@ -11,6 +11,7 @@ function Overscroll() {
   var v = 0;
   var target = null;
   var prev_time = 0;
+  var last_vel = 0;
 
   // Time since last fling, or null if not in fling.
   var fling_time = null;
@@ -24,6 +25,7 @@ function Overscroll() {
   this.setTarget = function(t) {
     target = t;
     v = 0;
+    last_vel = 0;
     fling_time = null;
     prev_time = 0;
   }
@@ -31,6 +33,7 @@ function Overscroll() {
   this.setVelocity = function(vel) {
     fling_time = 0;
     v = vel;
+    last_vel = vel;
   }
 
   this.addFriction = function(delta) {
@@ -71,6 +74,7 @@ function Overscroll() {
     if (d > this.MAX_OFFSET) {
       d = this.MAX_OFFSET;
       v = 0;
+      last_vel = 0;
     }
 
     var lerp = 1;
@@ -84,15 +88,17 @@ function Overscroll() {
     console.log("delta " + delta);
 
     var a = Math.pow(lerp, this.SPRING_LERP_POW) *
-        (this.SPRING_CONSTANT * (target - d) - this.DAMPING * v);
+        (this.SPRING_CONSTANT * (target - d) - this.DAMPING * (v + last_vel) / 2);
 
-    console.log("a " + (this.SPRING_CONSTANT * (target - d)) + " - " + (this.DAMPING * v) + " = " + a);
+    console.log("a " + (this.SPRING_CONSTANT * (target - d)) + " - " + (this.DAMPING * v) + " = " + a + "\n\n");
 
+    last_vel = v;
     v += a * delta;
     d += v * delta;
 
     if (target_pos - d > -1 && v <= 0) {
       v = 0;
+      last_vel = 0;
       d = target;
       target = null;
       prev_time = 0;
