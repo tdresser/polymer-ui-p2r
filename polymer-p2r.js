@@ -278,9 +278,9 @@ Polymer('polymer-p2r', {
       var offset = e.touches[0].screenY - pullStartY;
       console.log("offset " + offset);
 
-      if(!startingNewPull && !isPulling()) {
-        return;
-      }
+//      if(!startingNewPull && !isPulling()) {
+//        return;
+//      }
 
       if (offset > 0) {
         e.preventDefault();
