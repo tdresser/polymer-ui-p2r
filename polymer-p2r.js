@@ -162,7 +162,7 @@ Polymer('polymer-p2r', {
 
     // expose for access via developer console.
     window.overscroll = overscroll;
-    window.FLING_VELOCITY_MULTIPLIER = 0.9;
+    window.FLING_VELOCITY_MULTIPLIER = 1;
 
     var absorbNextTouchMove = false;
     var velocityCalculator = new VelocityCalculator(3);
@@ -290,8 +290,8 @@ Polymer('polymer-p2r', {
       velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
       var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
       console.log(scroller.scrollTop);
-      var next_delta_estimate = 16 * vel;
-      console.log("this delta was " + (scroller.scrollTop - prevScrollTop));
+      var next_delta_estimate = 32 * vel;
+      console.log("this delta was " + (prevScrollTop - scroller.scrollTop));
       prevScrollTop = scroller.scrollTop;
 
       console.log("next delta " + next_delta_estimate);
