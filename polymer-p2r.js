@@ -272,8 +272,8 @@ Polymer('polymer-p2r', {
       }
 
       var offset = e.touches[0].screenY - pullStartY;
-      console.log("offset " + offset);
-      console.log("scrollTop " + scroller.scrollTop);
+//      console.log("offset " + offset);
+//      console.log("scrollTop " + scroller.scrollTop);
 
       if(!isPulling() && offset <= 0) {
         // TODO: this is an ugly hack, to deal with the way that the scroll
