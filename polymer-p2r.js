@@ -200,6 +200,11 @@ Polymer('polymer-p2r', {
     }
 
     function onAnimationFrame(time) {
+      if (scroller.scrollTop === 0 && overscroll.getOffset() === 0) {
+        console.log("COMING FROM ZEROED");
+      }
+
+
       framePending = false;
       checkPulled();
       overscroll.step(time);
