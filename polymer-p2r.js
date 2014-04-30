@@ -206,6 +206,7 @@ Polymer('polymer-p2r', {
 
       if (overscroll.getOffset() <= 0) {
         console.log("Repair offset " + overscroll.getOffset());
+        console.log("EXISTING SCROLL TOP OF " + scroller.scrollTop);
         scroller.scrollTop = -overscroll.getOffset();
         overscroll.setOffset(0);
       } else if (scroller.scrollTop !== 0 && overscroll.getOffset() > 0) {
