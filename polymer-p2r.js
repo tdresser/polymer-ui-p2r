@@ -281,6 +281,7 @@ Polymer('polymer-p2r', {
       if (isFirstTouchMove) {
         pullStartY = e.touches[0].screenY + scroller.scrollTop - overscroll.getOffset();
         isFirstTouchMove = false;
+        console.log("PREVENT");
         e.preventDefault();
         return;
       }
@@ -309,6 +310,10 @@ Polymer('polymer-p2r', {
     function onScrollEvent(e) {
       if(isPulling()) {
         return;
+      }
+
+      if (scroller.scrollTop == 0) {
+        console.log("NEED TO ADVANCE HERE");
       }
 
       velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
