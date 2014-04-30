@@ -208,6 +208,8 @@ Polymer('polymer-p2r', {
         console.log("Repair offset " + overscroll.getOffset());
         scroller.scrollTop = -overscroll.getOffset();
         overscroll.setOffset(0);
+      } else if (scrollTop !== 0 && overscroll.getOffset() > 0) {
+        console.log("Repair offset required ");
       }
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
@@ -274,6 +276,8 @@ Polymer('polymer-p2r', {
       console.log("scrollTop " + scroller.scrollTop);
 
       if(!isPulling() && offset <= 0) {
+        // TODO: this is an ugly hack, to deal with the way that the scroll
+        // offset gets out of sync with |offset|.
         pullStartY = e.touches[0].screenY + scroller.scrollTop - overscroll.getOffset();
         return;
       }
