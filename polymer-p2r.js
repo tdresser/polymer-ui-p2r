@@ -204,6 +204,9 @@ Polymer('polymer-p2r', {
         console.log("COMING FROM ZEROED");
       }
 
+      console.log("OVERSCROLL OFFSET IS " + overscroll.getOffset());
+      console.log("SCROLL TOP IS " + scroller.scrollTop);
+
 
       framePending = false;
       checkPulled();
