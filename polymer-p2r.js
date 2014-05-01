@@ -1,5 +1,6 @@
 // TODO: remove the one frame stutter when flinging in.
 // TODO: don't allow flinging past the bottom of the page when the header is up.
+// TODO: don't redraw so much.
 
 function Overscroll() {
   this.MAX_OFFSET = 800;
@@ -54,7 +55,7 @@ function Overscroll() {
 
   this.step = function(time) {
     if (target === null && v === 0) {
-      return false;
+      return;
     }
 
     var target_pos = target === null ? 0 : target;
@@ -101,8 +102,6 @@ function Overscroll() {
       target = null;
       prev_time = 0;
     }
-
-    return true;
   }
 
   this.setOffset = function(o) {
@@ -226,11 +225,7 @@ Polymer('polymer-p2r', {
       }
 
       checkPulled();
-      var redraw_needed = overscroll.step(time);
-      if (!redraw_needed) {
-        console.log("EARLY OUT");
-        return;
-      }
+      overscroll.step(time);
 
       if (overscroll.getOffset() < 0) {
         console.log("Repair offset " + overscroll.getOffset());
