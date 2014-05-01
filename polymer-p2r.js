@@ -164,7 +164,7 @@ function VelocityCalculator(bufferSize) {
     var y1 = y_buffer[l - 3];
     var y2 = y_buffer[l - 2];
     var y3 = y_buffer[l - 1];
-    return [y2 - 1, y3 - y2];
+    return [y2 - y1, y3 - y2];
   }
 }
 
