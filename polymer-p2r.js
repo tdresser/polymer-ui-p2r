@@ -229,7 +229,7 @@ Polymer('polymer-p2r', {
         return;
       }
 
-      if (overscroll.getOffset() <= 0) {
+      if (overscroll.getOffset() < 0) {
         console.log("Repair offset " + overscroll.getOffset());
         console.log("EXISTING SCROLL TOP OF " + scroller.scrollTop);
         scroller.scrollTop = -overscroll.getOffset();
@@ -319,6 +319,7 @@ Polymer('polymer-p2r', {
       }
 
       if (scroller.scrollTop == 0 && overscroll.getOffset() == 0) {
+        console.log("SKIP SET OFFSET");
         // This should be the entrance to the js-scroll. The truncated delta is
         // handled in sampleScrollOffset.
         return;
@@ -343,11 +344,11 @@ Polymer('polymer-p2r', {
         if(Math.abs(lastDeltas[0]) < Math.abs(lastDeltas[1])) {
           console.log("TRUNCATED TO " + truncatedScrollDelta);
           // Looks like truncation occurred.
-          overscroll.setOffset(overscroll.getOffset() - truncatedScrollDelta);
+          overscroll.setOffset(overscroll.getOffset() + truncatedScrollDelta);
         } else {
           // No truncation observed,
           console.log("NO TRUNCATION, USING " + lastDeltas[1]);
-          overscroll.setOffset(overscroll.getOffset() - lastDeltas[1]);
+          overscroll.setOffset(overscroll.getOffset() + lastDeltas[1]);
         }
       }
 
