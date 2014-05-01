@@ -158,8 +158,9 @@ function VelocityCalculator(bufferSize) {
 
   this.getLastDeltas = function() {
     if (y_buffer.length < 3) {
-      return;
+      return [0,0];
     }
+    console.log(y_buffer);
     var l = y_buffer.length;
     var y1 = y_buffer[l - 3];
     var y2 = y_buffer[l - 2];
