@@ -323,7 +323,7 @@ Polymer('polymer-p2r', {
       if (scroller.scrollTop == 0 &&
           overscroll.getOffset() == 0 &&
           velocityCalculator.getLastDeltas()[1] !== 0) {
-        console.log("SKIP SET OFFSET");
+        console.log("SKIP SET OFFSET " + velocityCalculator.getLastDeltas());
         // We may have a truncated delta, which will be handled in sampleScrollOffset.
         return;
       }
