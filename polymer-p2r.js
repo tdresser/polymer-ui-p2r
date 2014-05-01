@@ -105,7 +105,7 @@ function Overscroll() {
   }
 
   this.setOffset = function(o) {
-    console.log("OFFSET IS " + o);
+    console.log("SET OFFSET TO " + o);
     fling_time = Number.MAX_VALUE;
     prev_time = 0;
     target = null;
@@ -236,7 +236,7 @@ Polymer('polymer-p2r', {
         console.log("Repair offset required ");
       }
 
-      console.log("SET OFFSET TO " + overscroll.getOffset());
+      console.log("OFFSET FOR DRAW IS " + overscroll.getOffset());
 
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
