@@ -155,6 +155,17 @@ function VelocityCalculator(bufferSize) {
 
     return sum_yt / sum_tt;
   }
+
+  this.getLastDeltas = function() {
+    if (y_buffer.length < 3) {
+      return;
+    }
+    var l = y_buffer.length;
+    var y1 = y_buffer[l - 3];
+    var y2 = y_buffer[l - 2];
+    var y3 = y_buffer[l - 1];
+    return [y2 - 1, y3 - y2];
+  }
 }
 
 
@@ -312,11 +323,13 @@ Polymer('polymer-p2r', {
         return;
       }
 
+      velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
+
       if (scroller.scrollTop == 0) {
-        console.log("NEED TO ADVANCE HERE");
+        var lastDeltas = velocityCalculator.getLastDeltas();
+        console.log("NEED TO ADVANCE HERE " + lastDeltas[0] + " " + lastDeltas[1]);
       }
 
-      velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
       var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
 //      console.log(scroller.scrollTop);
       // We want to tell if the next frame will fling into the overscroll
