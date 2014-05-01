@@ -213,6 +213,7 @@ Polymer('polymer-p2r', {
       }
     }
 
+    var lastTime = 0;
     function onAnimationFrame(time) {
       // TODO - figure out if we can ever not schedule an update.
       framePending = false;
@@ -238,6 +239,8 @@ Polymer('polymer-p2r', {
 
       console.log("OFFSET FOR DRAW IS " + overscroll.getOffset());
       console.log("SCROLLTOP FOR DRAW IS " + scroller.scrollTop);
+      console.log("TIME DELTA FOR DRAW IS " + (lastTime - time));
+      lastTime = time;
 
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
