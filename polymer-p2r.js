@@ -301,8 +301,8 @@ Polymer('polymer-p2r', {
       if (isFirstTouchMove) {
         pullStartY = e.touches[0].screenY + scroller.scrollTop - overscroll.getOffset();
         isFirstTouchMove = false;
-        console.log("PREVENT");
         if (isPulling()) {
+          console.log("PREVENT");
           e.preventDefault();
         }
         return;
