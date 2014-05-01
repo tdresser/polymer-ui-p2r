@@ -336,7 +336,7 @@ Polymer('polymer-p2r', {
 
       velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
 
-      if (scroller.scrollTop == 0) {
+      if (scroller.scrollTop == 0 && overscroll.getOffset() == 0) {
         var lastDeltas = velocityCalculator.getLastDeltas();
         var truncatedScrollDelta = lastDeltas[1] - lastDeltas[0];
         console.log("NEED TO ADVANCE HERE " + lastDeltas[0] + " " + lastDeltas[1]);
