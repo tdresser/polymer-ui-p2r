@@ -323,6 +323,7 @@ Polymer('polymer-p2r', {
         // handled in sampleScrollOffset.
         return;
       }
+      console.log("TOUCH MOVE SET OFFSET");
       overscroll.setOffset(offset);
     });
 
