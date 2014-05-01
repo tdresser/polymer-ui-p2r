@@ -365,5 +365,6 @@ Polymer('polymer-p2r', {
 
     scroller.addEventListener('touchcancel', finishPull);
     scroller.addEventListener('touchend', finishPull);
+    scheduleUpdate();
   }
 });
