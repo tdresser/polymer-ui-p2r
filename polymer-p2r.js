@@ -215,6 +215,8 @@ Polymer('polymer-p2r', {
     }
 
     function onAnimationFrame(time) {
+      scheduleUpdate();
+
       sampleScrollOffset();
 
       if (scroller.scrollTop === 0 && overscroll.getOffset() === 0) {
@@ -229,7 +231,6 @@ Polymer('polymer-p2r', {
       checkPulled();
       var redraw_needed = overscroll.step(time);
       if (!redraw_needed) {
-        scheduleUpdate();
         return;
       }
 
@@ -249,7 +250,6 @@ Polymer('polymer-p2r', {
       }
 
 // TODO - figure out if we can ever not schedule an update.
-      scheduleUpdate();
     }
 
     function scheduleUpdate() {
@@ -321,8 +321,12 @@ Polymer('polymer-p2r', {
         e.preventDefault();
       }
 
+      if (scroller.scrollTop == 0 && overscroll.getOffset() == 0) {
+        // This should be the entrance to the js-scroll. The truncated delta is
+        // handled in sampleScrollOffset.
+        return;
+      }
       overscroll.setOffset(offset);
-      scheduleUpdate();
     });
 
 //    var prevScrollTop = 0;
@@ -336,8 +340,9 @@ Polymer('polymer-p2r', {
 
       if (scroller.scrollTop == 0) {
         var lastDeltas = velocityCalculator.getLastDeltas();
+        var truncatedScrollDelta = lastDeltas[1] - lastDeltas[0];
         console.log("NEED TO ADVANCE HERE " + lastDeltas[0] + " " + lastDeltas[1]);
-        overscroll.setOffset(overscroll.getOffset() - lastDeltas[0] + lastDeltas[1]);
+        overscroll.setOffset(overscroll.getOffset() - truncatedScrollDelta);
       }
 
       var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
@@ -366,7 +371,6 @@ Polymer('polymer-p2r', {
         console.log("FLING " + vel)
         overscroll.setTarget(0);
         overscroll.setVelocity(vel);
-        scheduleUpdate();
       }
     }
 
