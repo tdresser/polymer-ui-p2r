@@ -215,6 +215,7 @@ Polymer('polymer-p2r', {
     }
 
     function onAnimationFrame(time) {
+      framePending = false;
       scheduleUpdate();
 
       sampleScrollOffset();
@@ -227,7 +228,6 @@ Polymer('polymer-p2r', {
       console.log("SCROLL TOP IS " + scroller.scrollTop);
 
 
-      framePending = false;
       checkPulled();
       var redraw_needed = overscroll.step(time);
       if (!redraw_needed) {
