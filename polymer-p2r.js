@@ -219,7 +219,7 @@ Polymer('polymer-p2r', {
       framePending = false;
       scheduleUpdate();
 
-      sampleScrollOffset();
+//      sampleScrollOffset();
 
       if (scroller.scrollTop === 0 && overscroll.getOffset() === 0) {
         console.log("COMING FROM ZEROED");
@@ -383,6 +383,7 @@ Polymer('polymer-p2r', {
       }
     }
 
+    scroller.addEventListener('scroll', sampleScrollOffset);
     scroller.addEventListener('touchcancel', finishPull);
     scroller.addEventListener('touchend', finishPull);
     scheduleUpdate();
