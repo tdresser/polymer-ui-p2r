@@ -302,7 +302,9 @@ Polymer('polymer-p2r', {
         pullStartY = e.touches[0].screenY + scroller.scrollTop - overscroll.getOffset();
         isFirstTouchMove = false;
         console.log("PREVENT");
-        e.preventDefault();
+        if (isPulling()) {
+          e.preventDefault();
+        }
         return;
       }
 
@@ -332,6 +334,7 @@ Polymer('polymer-p2r', {
 //    var prevScrollTop = 0;
 
     function sampleScrollOffset(e) {
+      console.log("sample");
       if(isPulling()) {
         return;
       }
