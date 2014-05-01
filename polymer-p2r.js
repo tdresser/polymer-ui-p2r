@@ -112,7 +112,7 @@ function Overscroll() {
     target = null;
     d = o;
     v = 0;
-    step(0);// TODO - this should be removed.
+    this.step(0);// TODO - this should be removed.
   }
 
   this.getOffset = function() {
