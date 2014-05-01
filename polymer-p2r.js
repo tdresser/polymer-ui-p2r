@@ -339,11 +339,14 @@ Polymer('polymer-p2r', {
         var lastDeltas = velocityCalculator.getLastDeltas();
         var truncatedScrollDelta = lastDeltas[1] - lastDeltas[0];
         console.log("NEED TO ADVANCE HERE " + lastDeltas[0] + " " + lastDeltas[1]);
+
         if(Math.abs(lastDeltas[0] < Math.abs(lastDeltas[1]))) {
+          console.log("TRUNCATED TO " + truncatedScrollDelta);
           // Looks like truncation occurred.
           overscroll.setOffset(overscroll.getOffset() - truncatedScrollDelta);
         } else {
           // No truncation observed,
+          console.log("NO TRUNCATION, USING " + lastDeltas[1]);
           overscroll.setOffset(overscroll.getOffset() - lastDeltas[1]);
         }
       }
