@@ -112,7 +112,7 @@ function Overscroll() {
     target = null;
     d = o;
     v = 0;
-    this.step(0);// TODO - this should be removed.
+//    this.step(0);// TODO - this should be removed.
   }
 
   this.getOffset = function() {
@@ -215,6 +215,7 @@ Polymer('polymer-p2r', {
     }
 
     function onAnimationFrame(time) {
+      // TODO - figure out if we can ever not schedule an update.
       framePending = false;
       scheduleUpdate();
 
@@ -227,6 +228,7 @@ Polymer('polymer-p2r', {
       checkPulled();
       var redraw_needed = overscroll.step(time);
       if (!redraw_needed) {
+        console.log("EARLY OUT");
         return;
       }
 
@@ -244,8 +246,6 @@ Polymer('polymer-p2r', {
       if (scroller.scrollTop === 0 && overscroll.getOffset() === 0) {
         console.log("ZEROED");
       }
-
-// TODO - figure out if we can ever not schedule an update.
     }
 
     function scheduleUpdate() {
