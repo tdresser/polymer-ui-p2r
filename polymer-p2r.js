@@ -337,7 +337,7 @@ Polymer('polymer-p2r', {
       if (scroller.scrollTop == 0) {
         var lastDeltas = velocityCalculator.getLastDeltas();
         console.log("NEED TO ADVANCE HERE " + lastDeltas[0] + " " + lastDeltas[1]);
-        overscroll.setOffset(overscroll.getOffset() + lastDeltas[0] - lastDeltas[1]);
+        overscroll.setOffset(overscroll.getOffset() - lastDeltas[0] + lastDeltas[1]);
       }
 
       var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
