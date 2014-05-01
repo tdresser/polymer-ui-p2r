@@ -340,7 +340,7 @@ Polymer('polymer-p2r', {
         var truncatedScrollDelta = lastDeltas[1] - lastDeltas[0];
         console.log("NEED TO ADVANCE HERE " + lastDeltas[0] + " " + lastDeltas[1]);
 
-        if(Math.abs(lastDeltas[0] < Math.abs(lastDeltas[1]))) {
+        if(Math.abs(lastDeltas[0]) < Math.abs(lastDeltas[1])) {
           console.log("TRUNCATED TO " + truncatedScrollDelta);
           // Looks like truncation occurred.
           overscroll.setOffset(overscroll.getOffset() - truncatedScrollDelta);
