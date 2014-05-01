@@ -343,7 +343,7 @@ Polymer('polymer-p2r', {
           overscroll.setOffset(overscroll.getOffset() + truncatedScrollDelta);
         } else {
           // No truncation observed,
-          console.log("NO TRUNCATION, USING " (-lastDeltas[1]));
+          console.log("NO TRUNCATION, USING " + (-lastDeltas[1]));
           overscroll.setOffset(overscroll.getOffset() - lastDeltas[1]);
         }
       }
