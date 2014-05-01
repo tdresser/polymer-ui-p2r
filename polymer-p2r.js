@@ -54,7 +54,8 @@ function Overscroll() {
 
   this.step = function(time) {
     if (target === null && v === 0) {
-      return;
+      console.log("BAILING FROM STEP");
+      return false;
     }
 
     var target_pos = target === null ? 0 : target;
@@ -101,6 +102,8 @@ function Overscroll() {
       target = null;
       prev_time = 0;
     }
+
+    return true;
   }
 
   this.setOffset = function(o) {
@@ -224,7 +227,11 @@ Polymer('polymer-p2r', {
 
       framePending = false;
       checkPulled();
-      overscroll.step(time);
+      var redraw_needed = overscroll.step(time);
+      if (!redraw_needed) {
+        scheduleUpdate();
+        return;
+      }
 
       if (overscroll.getOffset() <= 0) {
         console.log("Repair offset " + overscroll.getOffset());
