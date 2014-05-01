@@ -224,10 +224,6 @@ Polymer('polymer-p2r', {
         console.log("COMING FROM ZEROED");
       }
 
-      console.log("OVERSCROLL OFFSET IS " + overscroll.getOffset());
-      console.log("SCROLL TOP IS " + scroller.scrollTop);
-
-
       checkPulled();
       var redraw_needed = overscroll.step(time);
       if (!redraw_needed) {
@@ -334,7 +330,6 @@ Polymer('polymer-p2r', {
 //    var prevScrollTop = 0;
 
     function sampleScrollOffset(e) {
-      console.log("sample");
       if(isPulling()) {
         return;
       }
