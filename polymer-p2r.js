@@ -339,7 +339,13 @@ Polymer('polymer-p2r', {
         var lastDeltas = velocityCalculator.getLastDeltas();
         var truncatedScrollDelta = lastDeltas[1] - lastDeltas[0];
         console.log("NEED TO ADVANCE HERE " + lastDeltas[0] + " " + lastDeltas[1]);
-        overscroll.setOffset(overscroll.getOffset() - truncatedScrollDelta);
+        if(Math.abs(lastDeltas[0] < Math.abs(lastDeltas[1]))) {
+          // Looks like truncation occurred.
+          overscroll.setOffset(overscroll.getOffset() - truncatedScrollDelta);
+        } else {
+          // No truncation observed,
+          overscroll.setOffset(overscroll.getOffset() - lastDeltas[1]);
+        }
       }
 
       var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
