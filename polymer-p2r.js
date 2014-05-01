@@ -162,7 +162,6 @@ function VelocityCalculator(bufferSize) {
     if (y_buffer.length < 3) {
       return [0,0];
     }
-    console.log(y_buffer);
     var l = y_buffer.length;
     var y1 = y_buffer[l - 3];
     var y2 = y_buffer[l - 2];
@@ -349,6 +348,8 @@ Polymer('polymer-p2r', {
         // Looks like truncation occurred.
         console.log("TRUNCATED TO " + truncatedScrollDelta);
         overscroll.setOffset(overscroll.getOffset() + truncatedScrollDelta);
+      } else {
+        console.log("NO TRUNCATION");
       }
 
       if (fingersDown == 0) {
