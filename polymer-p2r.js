@@ -333,6 +333,7 @@ Polymer('polymer-p2r', {
       }
 
       var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
+      console.log("VELOCITY IS " + vel);
 //      console.log(scroller.scrollTop);
       // We want to tell if the next frame will fling into the overscroll
       // region. Overestimate the next frame time, and use that to guess if
