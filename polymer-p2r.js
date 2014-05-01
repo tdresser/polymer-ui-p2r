@@ -219,6 +219,9 @@ Polymer('polymer-p2r', {
       framePending = false;
       scheduleUpdate();
 
+      // TODO - we shouldn't really need to add the pile of zero's during overscroll.
+      velocityCalculator.addValue(scroller.scrollTop, time);
+
 //      sampleScrollOffset();
 
       if (scroller.scrollTop === 0 && overscroll.getOffset() === 0) {
@@ -331,10 +334,7 @@ Polymer('polymer-p2r', {
       overscroll.setOffset(offset);
     });
 
-    function sampleScrollOffset() {
-      // TODO - we shouldn't really need to add the pile of zero's during overscroll.
-      velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
-
+    function transitionIntoJavascriptScrollIfNecessary() {
       if(isPulling() || scroller.scrollTop > 0) {
         return;
       }
@@ -359,7 +359,7 @@ Polymer('polymer-p2r', {
       }
     }
 
-    scroller.addEventListener('scroll', sampleScrollOffset);
+    scroller.addEventListener('scroll', transitionIntoJavascriptScrollIfNecessary);
     scroller.addEventListener('touchcancel', finishPull);
     scroller.addEventListener('touchend', finishPull);
     scheduleUpdate();
