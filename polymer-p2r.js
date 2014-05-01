@@ -312,6 +312,7 @@ Polymer('polymer-p2r', {
         // TODO: this is an ugly hack, to deal with the way that the scroll
         // offset gets out of sync with |offset|.
         pullStartY = e.touches[0].screenY + scroller.scrollTop - overscroll.getOffset();
+        console.log("BAIL");
         return;
       }
 
