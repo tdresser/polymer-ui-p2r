@@ -54,7 +54,6 @@ function Overscroll() {
 
   this.step = function(time) {
     if (target === null && v === 0) {
-      console.log("BAILING FROM STEP");
       return false;
     }
 
