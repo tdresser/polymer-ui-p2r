@@ -307,8 +307,6 @@ Polymer('polymer-p2r', {
       }
 
       var offset = e.touches[0].screenY - pullStartY;
-//      console.log("offset " + offset);
-//      console.log("scrollTop " + scroller.scrollTop);
 
       if(!isPulling() && offset <= 0) {
         // TODO: this is an ugly hack, to deal with the way that the scroll
@@ -331,52 +329,28 @@ Polymer('polymer-p2r', {
       overscroll.setOffset(offset);
     });
 
-//    var prevScrollTop = 0;
+    function sampleScrollOffset() {
+      // TODO - we shouldn't really need to add the pile of zero's during overscroll.
+      velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
 
-    function sampleScrollOffset(e) {
-      if(isPulling()) {
+      if(isPulling() || scroller.scrollTop > 0) {
         return;
       }
-
-      velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
 
       console.log("LAST DELTA OF " + velocityCalculator.getLastDeltas()[1]);
 
-      if (scroller.scrollTop == 0 && overscroll.getOffset() == 0) {
-        var lastDeltas = velocityCalculator.getLastDeltas();
-        var truncatedScrollDelta = lastDeltas[1] - lastDeltas[0];
-        console.log("NEED TO ADVANCE HERE " + lastDeltas[0] + " " + lastDeltas[1]);
+      var lastDeltas = velocityCalculator.getLastDeltas();
+      var truncatedScrollDelta = lastDeltas[1] - lastDeltas[0];
+      console.log("NEED TO ADVANCE HERE " + lastDeltas[0] + " " + lastDeltas[1]);
 
-        if(Math.abs(lastDeltas[0]) > Math.abs(lastDeltas[1])) {
-          console.log("TRUNCATED TO " + truncatedScrollDelta);
-          // Looks like truncation occurred.
-          overscroll.setOffset(overscroll.getOffset() + truncatedScrollDelta);
-        }
-      }
-
-      var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
-//      console.log(scroller.scrollTop);
-      // We want to tell if the next frame will fling into the overscroll
-      // region. Overestimate the next frame time, and use that to guess if
-      // we'll hit the overscroll region next frame.
-//      var next_delta_estimate = 300 * vel;
-//      console.log("this delta was " + (prevScrollTop - scroller.scrollTop));
-//      prevScrollTop = scroller.scrollTop;
-//
-//      console.log("next delta " + next_delta_estimate);
-//      console.log("scroll top " + scroller.scrollTop);
-//
-//      if (scroller.scrollTop > next_delta_estimate) {
-//        console.log("Abort fling");
-//        return;
-//      }
-//
-
-      if (scroller.scrollTop > 0) {
-        return;
+      if(Math.abs(lastDeltas[0]) > Math.abs(lastDeltas[1])) {
+        // Looks like truncation occurred.
+        console.log("TRUNCATED TO " + truncatedScrollDelta);
+        overscroll.setOffset(overscroll.getOffset() + truncatedScrollDelta);
       }
 
       if (fingersDown == 0) {
+        var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
         console.log("FLING " + vel)
         overscroll.setTarget(0);
         overscroll.setVelocity(vel);
