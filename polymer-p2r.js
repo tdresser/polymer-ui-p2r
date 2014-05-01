@@ -212,6 +212,8 @@ Polymer('polymer-p2r', {
     }
 
     function onAnimationFrame(time) {
+      sampleScrollOffset();
+
       if (scroller.scrollTop === 0 && overscroll.getOffset() === 0) {
         console.log("COMING FROM ZEROED");
       }
@@ -239,9 +241,8 @@ Polymer('polymer-p2r', {
         console.log("ZEROED");
       }
 
-      if (!overscroll.reachedTarget()) {
-        scheduleUpdate();
-      }
+// TODO - figure out if we can ever not schedule an update.
+      scheduleUpdate();
     }
 
     function scheduleUpdate() {
@@ -319,7 +320,7 @@ Polymer('polymer-p2r', {
 
 //    var prevScrollTop = 0;
 
-    function onScrollEvent(e) {
+    function sampleScrollOffset(e) {
       if(isPulling()) {
         return;
       }
@@ -361,7 +362,6 @@ Polymer('polymer-p2r', {
       }
     }
 
-    scroller.addEventListener('scroll', onScrollEvent);
     scroller.addEventListener('touchcancel', finishPull);
     scroller.addEventListener('touchend', finishPull);
   }
