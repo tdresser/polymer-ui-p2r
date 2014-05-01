@@ -106,12 +106,12 @@ function Overscroll() {
   }
 
   this.setOffset = function(o) {
+    console.log("OFFSET IS " + o);
     fling_time = Number.MAX_VALUE;
     prev_time = 0;
     target = null;
     d = o;
     v = 0;
-    this.step(0);
   }
 
   this.getOffset = function() {
