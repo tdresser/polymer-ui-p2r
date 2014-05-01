@@ -320,10 +320,11 @@ Polymer('polymer-p2r', {
         e.preventDefault();
       }
 
-      if (scroller.scrollTop == 0 && overscroll.getOffset() == 0) {
+      if (scroller.scrollTop == 0 &&
+          overscroll.getOffset() == 0 &&
+          velocityCalculator.getLastDeltas()[1] !== 0) {
         console.log("SKIP SET OFFSET");
-        // This should be the entrance to the js-scroll. The truncated delta is
-        // handled in sampleScrollOffset.
+        // We may have a truncated delta, which will be handled in sampleScrollOffset.
         return;
       }
       console.log("TOUCH MOVE SET OFFSET");
