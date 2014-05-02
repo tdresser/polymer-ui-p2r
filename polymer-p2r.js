@@ -203,9 +203,9 @@ Polymer('polymer-p2r', {
     }
 
     function checkPulled() {
-      if (fingersDown === 0) {
-        return;
-      }
+//      if (fingersDown === 0) {
+//        return;
+//      }
       var triggerOffset = 60;
       if (getHeaderClassName() != 'loading') {
         setHeaderClassName(overscroll.getOffset() > triggerOffset ? 'pulled' : '');
