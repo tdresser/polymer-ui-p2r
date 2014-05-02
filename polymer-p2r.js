@@ -195,7 +195,6 @@ Polymer('polymer-p2r', {
     }
 
     function setHeaderClassName(name) {
-      console.log("SET CLASS NAME TO " + name);
       self.className = name;
     }
 
@@ -204,11 +203,10 @@ Polymer('polymer-p2r', {
     }
 
     function checkPulled() {
-//      if (fingersDown === 0) {
-//        return;
-//      }
+      if (fingersDown === 0) {
+        return;
+      }
       var triggerOffset = 60;
-      console.log("getOffset " + overscroll.getOffset());
       if (getHeaderClassName() != 'loading') {
         setHeaderClassName(overscroll.getOffset() > triggerOffset ? 'pulled' : '');
       }
