@@ -190,7 +190,7 @@ Polymer('polymer-p2r', {
 
     var velocityCalculator = new VelocityCalculator(3);
 
-    function getHeaderClassName(name) {
+    function getHeaderClassName() {
       return self.className;
     }
 
@@ -243,7 +243,6 @@ Polymer('polymer-p2r', {
       console.log("SCROLLTOP FOR DRAW IS " + scroller.scrollTop);
       console.log("TIME DELTA FOR DRAW IS " + (lastTime - time));
       console.log("HEIGHT IS " + scroller.clientHeight);
-      lastTime = time;
 
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
@@ -365,5 +364,15 @@ Polymer('polymer-p2r', {
     scroller.addEventListener('touchcancel', finishPull);
     scroller.addEventListener('touchend', finishPull);
     scheduleUpdate();
+
+    function toggleHeader() {
+      if (getHeaderClassName() == '') {
+        setHeaderClassName("loading");
+      } else {
+        setHeaderClassName("");
+      }
+    }
+
+    window.setInterval(toggleHeader, 500);
   }
 });
