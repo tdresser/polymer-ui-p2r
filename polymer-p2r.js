@@ -187,6 +187,7 @@ Polymer('polymer-p2r', {
     // expose for access via developer console.
     window.overscroll = overscroll;
     window.FLING_VELOCITY_MULTIPLIER = 1;
+    window.polymer_element = this;
 
     var velocityCalculator = new VelocityCalculator(3);
 
