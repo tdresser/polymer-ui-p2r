@@ -242,6 +242,7 @@ Polymer('polymer-p2r', {
       console.log("OFFSET FOR DRAW IS " + overscroll.getOffset());
       console.log("SCROLLTOP FOR DRAW IS " + scroller.scrollTop);
       console.log("TIME DELTA FOR DRAW IS " + (lastTime - time));
+      console.log("HEIGHT IS " + scroller.clientHeight);
       lastTime = time;
 
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
