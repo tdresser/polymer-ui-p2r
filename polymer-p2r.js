@@ -195,6 +195,7 @@ Polymer('polymer-p2r', {
     }
 
     function setHeaderClassName(name) {
+      console.log("SET CLASS NAME TO " + name);
       self.className = name;
     }
 
