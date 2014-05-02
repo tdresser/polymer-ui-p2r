@@ -239,10 +239,14 @@ Polymer('polymer-p2r', {
         console.log("Repair offset required ");
       }
 
-      console.log("OFFSET FOR DRAW IS " + overscroll.getOffset());
-      console.log("SCROLLTOP FOR DRAW IS " + scroller.scrollTop);
-      console.log("TIME DELTA FOR DRAW IS " + (lastTime - time));
-      console.log("HEIGHT IS " + scroller.clientHeight);
+//      console.log("OFFSET FOR DRAW IS " + overscroll.getOffset());
+//      console.log("SCROLLTOP FOR DRAW IS " + scroller.scrollTop);
+//      console.log("TIME DELTA FOR DRAW IS " + (lastTime - time));
+//      console.log("HEIGHT IS " + scroller.clientHeight);
+
+      console.log(scroller.scrollTop + " + " + scroller.clientHeight + " < " + scrollcontent.clientHeight);
+
+      console.log((scroller.scrollTop + scroller.clientHeight) + " < " + scrollcontent.clientHeight);
 
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
@@ -285,7 +289,8 @@ Polymer('polymer-p2r', {
     }
 
     function finishLoading() {
-//      setHeaderClassName('');
+//      setHeaderClassName(''); // TODO - temporarily disabled to help test
+//      crazy bug with gap at the bottom.
       if (isP2rVisible() && fingersDown == 0) {
         overscroll.setTarget(Math.max(0, scroller.scrollTop));
         scheduleUpdate();
