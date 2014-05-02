@@ -285,7 +285,7 @@ Polymer('polymer-p2r', {
     }
 
     function finishLoading() {
-      setHeaderClassName('');
+//      setHeaderClassName('');
       if (isP2rVisible() && fingersDown == 0) {
         overscroll.setTarget(Math.max(0, scroller.scrollTop));
         scheduleUpdate();
@@ -365,7 +365,7 @@ Polymer('polymer-p2r', {
     scroller.addEventListener('touchend', finishPull);
     scheduleUpdate();
 
-    function toggleHeader() {
+/*    function toggleHeader() {
       if (getHeaderClassName() == '') {
         setHeaderClassName("loading");
       } else {
@@ -373,6 +373,6 @@ Polymer('polymer-p2r', {
       }
     }
 
-    window.setInterval(toggleHeader, 500);
+    window.setInterval(toggleHeader, 500);*/
   }
 });
