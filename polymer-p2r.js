@@ -183,6 +183,7 @@ Polymer('polymer-p2r', {
     var fingersDown = 0;
     var overscroll = new Overscroll();
     var isFirstTouchMove = false;
+    var frame = 0;
 
     // expose for access via developer console.
     window.overscroll = overscroll;
@@ -239,11 +240,13 @@ Polymer('polymer-p2r', {
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
 
-      console.log(scroller.scrollTop + overscroll.getOffset());
+      console.log("pos " + (scroller.scrollTop + overscroll.getOffset()) + " in frame"
+          + frame);
 
       if (scroller.scrollTop === 0 && overscroll.getOffset() === 0) {
         console.log("ZEROED");
       }
+      frame++;
     }
 
     function scheduleUpdate() {
