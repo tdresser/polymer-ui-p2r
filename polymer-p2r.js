@@ -239,6 +239,8 @@ Polymer('polymer-p2r', {
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
 
+      console.log(scroller.scrollTop + overscroll.getOffset());
+
       if (scroller.scrollTop === 0 && overscroll.getOffset() === 0) {
         console.log("ZEROED");
       }
