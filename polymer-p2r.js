@@ -333,6 +333,7 @@ Polymer('polymer-p2r', {
     });
 
     function transitionIntoJavascriptScrollIfNecessary() {
+      console.log("SCROLL event in frame " + frame);
       if(isPulling() || scroller.scrollTop > 0) {
         return;
       }
