@@ -361,15 +361,5 @@ Polymer('polymer-p2r', {
       // Make 100% sure chrome knows we have a scroll listener.
     });
     scheduleUpdate();
-
-/*    function toggleHeader() {
-      if (getHeaderClassName() == '') {
-        setHeaderClassName("loading");
-      } else {
-        setHeaderClassName("");
-      }
-    }
-
-    window.setInterval(toggleHeader, 500);*/
   }
 });
