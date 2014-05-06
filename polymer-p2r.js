@@ -245,10 +245,6 @@ Polymer('polymer-p2r', {
 //      console.log("TIME DELTA FOR DRAW IS " + (lastTime - time));
 //      console.log("HEIGHT IS " + scroller.clientHeight);
 
-      console.log(scroller.scrollTop + " + " + scroller.clientHeight + " < " + scrollcontent.clientHeight);
-
-      console.log((scroller.scrollTop + scroller.clientHeight) + " < " + scrollcontent.clientHeight);
-
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
 
@@ -301,6 +297,7 @@ Polymer('polymer-p2r', {
     scroller.addEventListener('touchstart', function(e) {
       fingersDown++;
       isFirstTouchMove = true;
+      overscroll.setOffset(overscroll.getOffset());
     });
 
     scroller.addEventListener('touchmove', function(e) {
