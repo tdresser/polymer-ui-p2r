@@ -224,10 +224,6 @@ Polymer('polymer-p2r', {
 
 //      sampleScrollOffset();
 
-      if (scroller.scrollTop === 0 && overscroll.getOffset() === 0) {
-        console.log("COMING FROM ZEROED");
-      }
-
       checkPulled();
       overscroll.step(time);
 
@@ -239,11 +235,6 @@ Polymer('polymer-p2r', {
       } else if (scroller.scrollTop !== 0 && overscroll.getOffset() > 0) {
         console.log("Repair offset required ");
       }
-
-//      console.log("OFFSET FOR DRAW IS " + overscroll.getOffset());
-//      console.log("SCROLLTOP FOR DRAW IS " + scroller.scrollTop);
-//      console.log("TIME DELTA FOR DRAW IS " + (lastTime - time));
-//      console.log("HEIGHT IS " + scroller.clientHeight);
 
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
@@ -348,7 +339,7 @@ Polymer('polymer-p2r', {
 
       if(Math.abs(lastDeltas[0]) > Math.abs(lastDeltas[1])) {
         // Looks like truncation occurred.
-        console.log("TRUNCATED TO " + truncatedScrollDelta);
+        console.log("TRUNCATED BY " + truncatedScrollDelta);
         overscroll.setOffset(overscroll.getOffset() + truncatedScrollDelta);
       } else {
         console.log("NO TRUNCATION");
@@ -365,6 +356,10 @@ Polymer('polymer-p2r', {
     scroller.addEventListener('scroll', transitionIntoJavascriptScrollIfNecessary);
     scroller.addEventListener('touchcancel', finishPull);
     scroller.addEventListener('touchend', finishPull);
+
+    document.addEventListener('scroll', function() {
+      // Make 100% sure chrome knows we have a scroll listener.
+    });
     scheduleUpdate();
 
 /*    function toggleHeader() {
