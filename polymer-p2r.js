@@ -286,8 +286,7 @@ Polymer('polymer-p2r', {
     }
 
     function finishLoading() {
-//      setHeaderClassName(''); // TODO - temporarily disabled to help test
-//      crazy bug with gap at the bottom.
+      setHeaderClassName('');
       if (isP2rVisible() && fingersDown == 0) {
         overscroll.setTarget(Math.max(0, scroller.scrollTop));
         scheduleUpdate();
