@@ -240,7 +240,7 @@ Polymer('polymer-p2r', {
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
 
-      console.log("pos " + (scroller.scrollTop + overscroll.getOffset()) + " in frame"
+      console.log("pos " + (scroller.scrollTop + overscroll.getOffset()) + " in frame "
           + frame);
 
       if (scroller.scrollTop === 0 && overscroll.getOffset() === 0) {
@@ -296,6 +296,7 @@ Polymer('polymer-p2r', {
     });
 
     scroller.addEventListener('touchmove', function(e) {
+      console.log("Touch move in frame " + frame);
       if (isFirstTouchMove) {
         pullStartY = e.touches[0].screenY + scroller.scrollTop - overscroll.getOffset();
         isFirstTouchMove = false;
