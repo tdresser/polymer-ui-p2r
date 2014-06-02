@@ -6,8 +6,13 @@
     <title>Polymer Pull to Refresh demo</title>
   </head>
   <style>
-    html, body {
+    html, body, #polymer-p2r-container {
       margin:0;
+      height:100%;
+    }
+
+    #polymer-p2r-container {
+      overflow:scroll;
     }
 
     .row {
@@ -25,35 +30,37 @@
 
   </style
   <body>
-    <div class="p2rheader">
-      <div class="header-div">
+    <div id="polymer-p2r-container">
+      <div class="p2rheader">
+        <div class="header-div">
+        </div>
       </div>
-    </div>
-    <div class="content">
-      <div class='row odd'>1</div>
-      <div class='row even'>2</div>
-      <div class='row odd'>3</div>
-      <div class='row even'>4</div>
-      <div class='row odd'>5</div>
-      <div class='row even'>6</div>
-      <div class='row odd'>7</div>
-      <div class='row even'>8</div>
-      <div class='row odd'>9</div>
-      <div class='row even'>10</div>
-      <div class='row odd'>11</div>
-      <div class='row even'>12</div>
-      <div class='row odd'>13</div>
-      <div class='row even'>14</div>
-      <div class='row odd'>15</div>
-      <div class='row even'>16</div>
-      <div class='row odd'>17</div>
-      <div class='row even'>18</div>
-      <div class='row odd'>19</div>
-      <div class='row even'>20</div>
-      <div class='row odd'>21</div>
-      <div class='row even'>22</div>
-      <div class='row odd'>23</div>
-      <div class='row even'>24</div>
+      <div class="content">
+        <div class='row odd'>1</div>
+        <div class='row even'>2</div>
+        <div class='row odd'>3</div>
+        <div class='row even'>4</div>
+        <div class='row odd'>5</div>
+        <div class='row even'>6</div>
+        <div class='row odd'>7</div>
+        <div class='row even'>8</div>
+        <div class='row odd'>9</div>
+        <div class='row even'>10</div>
+        <div class='row odd'>11</div>
+        <div class='row even'>12</div>
+        <div class='row odd'>13</div>
+        <div class='row even'>14</div>
+        <div class='row odd'>15</div>
+        <div class='row even'>16</div>
+        <div class='row odd'>17</div>
+        <div class='row even'>18</div>
+        <div class='row odd'>19</div>
+        <div class='row even'>20</div>
+        <div class='row odd'>21</div>
+        <div class='row even'>22</div>
+        <div class='row odd'>23</div>
+        <div class='row even'>24</div>
+      </div>
     </div>
   </body>
 </html>
