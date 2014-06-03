@@ -30,9 +30,12 @@
 
   </style>
   <script>
-    document.addEventListener("touchmove", function() {
-      console.log("TEST");
-    });
+    window.onload = function() {
+      var container = document.getElementById("#polymer-p2r-container");
+      document.addEventListener("touchmove", function() {
+        container.style.webkitTransform = 'translate3d(0, 0, 0)';
+      });
+    };
   </script>
   <body>
     <div id="polymer-p2r-container">
