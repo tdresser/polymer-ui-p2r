@@ -105,7 +105,6 @@ function Overscroll() {
   }
 
   this.setOffset = function(o) {
-    console.log("SET OFFSET TO " + o);
     fling_time = Number.MAX_VALUE;
     prev_time = 0;
     target = null;
@@ -230,8 +229,6 @@ Polymer('polymer-p2r', {
       overscroll.step(time);
 
       if (overscroll.getOffset() < 0) {
-        console.log("Repair offset " + overscroll.getOffset());
-        console.log("EXISTING SCROLL TOP OF " + scroller.scrollTop);
         scroller.scrollTop = -overscroll.getOffset();
         overscroll.setOffset(0);
       } else if (scroller.scrollTop !== 0 && overscroll.getOffset() > 0) {
@@ -240,13 +237,6 @@ Polymer('polymer-p2r', {
 
       translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
       translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
-
-      console.log("pos " + (scroller.scrollTop + overscroll.getOffset()) + " in frame "
-          + frame);
-
-      if (scroller.scrollTop === 0 && overscroll.getOffset() === 0) {
-        console.log("ZEROED");
-      }
       frame++;
     }
 
@@ -297,12 +287,10 @@ Polymer('polymer-p2r', {
     });
 
     scroller.addEventListener('touchmove', function(e) {
-      console.log("Touch move in frame " + frame);
       if (isFirstTouchMove) {
         pullStartY = e.touches[0].screenY + scroller.scrollTop - overscroll.getOffset();
         isFirstTouchMove = false;
         if (isPulling()) {
-          console.log("PREVENT");
           e.preventDefault();
         }
         return;
@@ -314,7 +302,6 @@ Polymer('polymer-p2r', {
         // TODO: this is an ugly hack, to deal with the way that the scroll
         // offset gets out of sync with |offset|.
         pullStartY = e.touches[0].screenY + scroller.scrollTop - overscroll.getOffset();
-        console.log("BAIL");
         return;
       }
 
@@ -325,37 +312,27 @@ Polymer('polymer-p2r', {
       if (scroller.scrollTop == 0 &&
           overscroll.getOffset() == 0 &&
           velocityCalculator.getLastDeltas()[1] !== 0) {
-        console.log("SKIP SET OFFSET " + velocityCalculator.getLastDeltas());
         // We may have a truncated delta, which will be handled in sampleScrollOffset.
         return;
       }
-      console.log("TOUCH MOVE SET OFFSET");
       overscroll.setOffset(offset);
     });
 
     function transitionIntoJavascriptScrollIfNecessary() {
-      console.log("SCROLL event in frame " + frame);
       if(isPulling() || scroller.scrollTop > 0) {
         return;
       }
 
-      console.log("LAST DELTA OF " + velocityCalculator.getLastDeltas()[1]);
-
       var lastDeltas = velocityCalculator.getLastDeltas();
       var truncatedScrollDelta = lastDeltas[1] - lastDeltas[0];
-      console.log("NEED TO ADVANCE HERE " + lastDeltas[0] + " " + lastDeltas[1]);
 
       if(Math.abs(lastDeltas[0]) > Math.abs(lastDeltas[1])) {
         // Looks like truncation occurred.
-        console.log("TRUNCATED BY " + truncatedScrollDelta);
         overscroll.setOffset(overscroll.getOffset() + truncatedScrollDelta);
-      } else {
-        console.log("NO TRUNCATION");
       }
 
       if (fingersDown == 0) {
         var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
-        console.log("FLING " + vel)
         overscroll.setTarget(0);
         overscroll.setVelocity(vel);
       }
