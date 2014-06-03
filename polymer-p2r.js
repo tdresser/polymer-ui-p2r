@@ -235,8 +235,11 @@ Polymer('polymer-p2r', {
         console.log("Repair offset required ");
       }
 
-      translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
-      translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
+      var offset = overscroll.addFriction(overscroll.getOffset());
+      var clientHeight = p2r.clientHeight;
+
+      translateY(scrollcontent, offset);
+      translateY(p2r, offset - clientHeight);
       frame++;
     }
 
