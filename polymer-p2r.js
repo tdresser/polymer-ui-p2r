@@ -186,6 +186,7 @@ Polymer('polymer-p2r', {
     var frame = 0;
 
     // expose for access via developer console.
+    window.scroller = scroller;
     window.overscroll = overscroll;
     window.FLING_VELOCITY_MULTIPLIER = 1;
     window.polymer_element = this;
