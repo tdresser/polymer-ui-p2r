@@ -1,6 +1,6 @@
 // TODO: remove the one frame stutter when flinging in.
-// TODO: don't allow flinging past the bottom of the page when the header is up.
 // TODO: don't redraw so much.
+// TODO: Truncation calculation is broken (since the switch to circular buffer).
 
 function Overscroll(max_offset) {
   // Constants to configure spring physics
@@ -148,14 +148,11 @@ function VelocityCalculator(bufferSize) {
     return sum_yt / sum_tt;
   }
 
+  // TODO - fix this! It broke when I switched to a circular buffer.
   this.getLastDeltas = function() {
-    if (y_buffer.length < 3) {
-      return [0,0];
-    }
-    var l = y_buffer.length;
-    var y1 = y_buffer[l - 3];
-    var y2 = y_buffer[l - 2];
-    var y3 = y_buffer[l - 1];
+    var y1 = y_buffer[(index - 3) % bufferSize];
+    var y2 = y_buffer[(index - 2) % bufferSize];
+    var y3 = y_buffer[(index - 1) % bufferSize];
     return [y2 - y1, y3 - y2];
   }
 }
