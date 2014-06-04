@@ -53,9 +53,6 @@ function Overscroll(max_offset) {
       return false;
     }
 
-    console.log("target is " + target);
-    console.log("v is " + v);
-
     var current_distance = d;
 
     var target_pos = target === null ? 0 : target;
@@ -215,7 +212,7 @@ Polymer('polymer-p2r', {
 
       velocityCalculator.addValue(scroller.scrollTop, time);
 
-      if (!overscroll.step(time)) {
+      if (!overscroll.step(time) && overscroll.getOffset() == 0) {
         return;
       }
 
