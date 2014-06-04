@@ -2,9 +2,7 @@
 // TODO: don't allow flinging past the bottom of the page when the header is up.
 // TODO: don't redraw so much.
 
-function Overscroll() {
-  this.MAX_OFFSET = 800;
-
+function Overscroll(max_offset) {
   // Constants to configure spring physics
   this.SPRING_CONSTANT = 0.0003;
   this.DAMPING = 0.5;
@@ -42,11 +40,8 @@ function Overscroll() {
       return delta;
     }
 
-    delta = delta/this.MAX_OFFSET;
-    if (delta > 1) {
-      delta = 1;
-    }
-    return 2 * this.MAX_OFFSET * (delta/2 - Math.pow(delta/2, 1.5));
+    delta = delta / max_offset;
+    return max_offset * delta / (1 + delta);
   }
 
   this.reachedTarget = function() {
@@ -77,8 +72,8 @@ function Overscroll() {
       fling_time += delta;
     }
 
-    if (d > this.MAX_OFFSET) {
-      d = this.MAX_OFFSET;
+    if (d > max_offset) {
+      d = max_offset;
       v = 0;
     }
 
@@ -177,7 +172,8 @@ Polymer('polymer-p2r', {
     var pullStartY = 0;
     var loadingOffset = 150;
     var fingersDown = 0;
-    var overscroll = new Overscroll();
+
+    var overscroll = new Overscroll(window.innerHeight);
     var isFirstTouchMove = false;
     var frame = 0;
 
