@@ -50,8 +50,13 @@ function Overscroll(max_offset) {
 
   this.step = function(time) {
     if (target === null && v === 0) {
-      return;
+      return false;
     }
+
+    console.log("target is " + target);
+    console.log("v is " + v);
+
+    var current_distance = d;
 
     var target_pos = target === null ? 0 : target;
 
@@ -92,6 +97,8 @@ function Overscroll(max_offset) {
       target = null;
       prev_time = 0;
     }
+
+    return d !== current_distance;
   }
 
   this.setOffset = function(o) {
@@ -163,7 +170,6 @@ Polymer('polymer-p2r', {
     var scroller = self.$.scroller;
     var p2r = self.$.p2r;
     var scrollcontent = self.$.scrollcontent;
-    var framePending = false;
     var pullStartY = 0;
     var loadingOffset = 150;
     var fingersDown = 0;
@@ -178,7 +184,7 @@ Polymer('polymer-p2r', {
     window.FLING_VELOCITY_MULTIPLIER = 1;
     window.polymer_element = this;
 
-    var velocityCalculator = new VelocityCalculator(3);
+    var velocityCalculator = new VelocityCalculator(5);
 
     function getHeaderClassName() {
       return self.className;
@@ -205,16 +211,13 @@ Polymer('polymer-p2r', {
     var lastTime = 0;
     function onAnimationFrame(time) {
       // TODO - figure out if we can ever not schedule an update.
-      framePending = false;
-      scheduleUpdate();
+      requestAnimationFrame(onAnimationFrame);
 
-      // TODO - we shouldn't really need to add the pile of zero's during overscroll.
       velocityCalculator.addValue(scroller.scrollTop, time);
 
-//      sampleScrollOffset();
-
-      checkPulled();
-      overscroll.step(time);
+      if (!overscroll.step(time)) {
+        return;
+      }
 
       if (overscroll.getOffset() < 0) {
         scroller.scrollTop = -overscroll.getOffset();
@@ -226,16 +229,10 @@ Polymer('polymer-p2r', {
       var offset = overscroll.addFriction(overscroll.getOffset());
       var clientHeight = p2r.clientHeight;
 
+      checkPulled();
       translateY(scrollcontent, offset);
       translateY(p2r, offset - clientHeight);
       frame++;
-    }
-
-    function scheduleUpdate() {
-      if (!framePending) {
-        framePending = true;
-        requestAnimationFrame(onAnimationFrame);
-      }
     }
 
     function isP2rVisible() {
@@ -260,14 +257,12 @@ Polymer('polymer-p2r', {
       } else {
         overscroll.setTarget(Math.max(0, scroller.scrollTop));
       }
-      scheduleUpdate();
     }
 
     function finishLoading() {
       setHeaderClassName('');
       if (isP2rVisible() && fingersDown == 0) {
         overscroll.setTarget(Math.max(0, scroller.scrollTop));
-        scheduleUpdate();
       }
     }
 
@@ -303,7 +298,8 @@ Polymer('polymer-p2r', {
       if (scroller.scrollTop == 0 &&
           overscroll.getOffset() == 0 &&
           velocityCalculator.getLastDeltas()[1] !== 0) {
-        // We may have a truncated delta, which will be handled in sampleScrollOffset.
+        // We may have a truncated delta, which will be handled in
+        // transitionIntoJavascriptScrollIfNecessary.
         return;
       }
       overscroll.setOffset(offset);
@@ -336,6 +332,6 @@ Polymer('polymer-p2r', {
     document.addEventListener('scroll', function() {
       // Make 100% sure chrome knows we have a scroll listener.
     });
-    scheduleUpdate();
+    requestAnimationFrame(onAnimationFrame);
   }
 });
