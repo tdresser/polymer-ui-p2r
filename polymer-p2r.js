@@ -72,11 +72,6 @@ function Overscroll(max_offset) {
       fling_time += delta;
     }
 
-    if (d > max_offset) {
-      d = max_offset;
-      v = 0;
-    }
-
     var lerp = 1;
     if (fling_time !== null && fling_time < 500) {
       lerp = fling_time / 500;
