@@ -61,7 +61,7 @@ function Overscroll() {
     var target_pos = target === null ? 0 : target;
 
     // Use a hard coded delta for now, as Euler integration behaves badly when
-    // given timestamps which vary as much as the RAF timestamps due.
+    // given timestamps which vary as much as the RAF timestamps do.
     // TODO: integrate better (RK4? Do more Euler integration steps, with a
     // fixed timestep, and interpolate between them?)
     var delta = 16;//time - prev_time;
@@ -110,7 +110,6 @@ function Overscroll() {
     target = null;
     d = o;
     v = 0;
-//    this.step(0);// TODO - this should be removed.
   }
 
   this.getOffset = function() {
@@ -120,27 +119,25 @@ function Overscroll() {
 
 // Performs an ordinary least squares regression.
 function VelocityCalculator(bufferSize) {
-  var y_buffer = [];
-  var t_buffer = [];
+  var y_buffer = new Array(bufferSize);
+  var t_buffer = new Array(bufferSize);
+  var index = 0;
 
-  var y_sum = 0;
-  var t_sum = 0;
-
+  // We do this frequently, so keep it light. Delay as much computation as
+  // possible until |getVelocity| is called.
   this.addValue = function(y, t) {
-    y_buffer.push(y);
-    y_sum += y;
-    t_buffer.push(t);
-    t_sum += t;
-
-    if (y_buffer.length > bufferSize) {
-      y_sum -= y_buffer.shift();
-      t_sum -= t_buffer.shift();
-    }
+    y_buffer[index] = y;
+    t_buffer[index] = t;
+    index = (index + 1) % bufferSize;
   }
 
   this.getVelocity = function() {
-    if (y_buffer.length < bufferSize) {
-      return 0;
+    var y_sum = 0;
+    var t_sum = 0;
+
+    for (var i = 0; i < bufferSize; ++i) {
+      y_sum += y_buffer[i];
+      t_sum += t_buffer[i];
     }
 
     var y_mean = y_sum / bufferSize;
