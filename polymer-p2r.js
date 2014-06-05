@@ -1,12 +1,15 @@
 // TODO: remove the one frame stutter when flinging in.
 // TODO: don't redraw so much.
-// TODO: Truncation calculation is broken (since the switch to circular buffer).
+
+// Using a constant timestep for now.
+var TIMESTEP = 16;
 
 function Overscroll(max_offset) {
   // Constants to configure spring physics
   this.SPRING_CONSTANT = 0.0003;
   this.DAMPING = 0.5;
   this.SPRING_LERP_POW = 4;
+  this.FRICTION = 0.95;
 
   var self = this;
   var d = 0;
@@ -56,17 +59,12 @@ function Overscroll(max_offset) {
     var current_distance = d;
 
     var target_pos = target === null ? 0 : target;
-
-    // Use a hard coded delta for now, as Euler integration behaves badly when
-    // given timestamps which vary as much as the RAF timestamps do.
-    // TODO: integrate better (RK4? Do more Euler integration steps, with a
-    // fixed timestep, and interpolate between them?)
-    var delta = 16;//time - prev_time;
+    var delta = time - prev_time;
 
     // If we don't have information on elapsed time, assume it's been 30 ms
     // since the last update.
     if (prev_time === 0) {
-      delta = 30;
+      delta = TIMESTEP;
     }
 
     prev_time = time;
@@ -81,6 +79,7 @@ function Overscroll(max_offset) {
 
     var a = Math.pow(lerp, this.SPRING_LERP_POW) *
         (this.SPRING_CONSTANT * (target - d));
+    v *= this.FRICTION;
     v += a * delta;
     // Using the velocity after applying the acceleration due to the spring
     // keeps the simulation more stable.
@@ -132,6 +131,8 @@ function VelocityCalculator(bufferSize) {
     for (var i = 0; i < bufferSize; ++i) {
       y_sum += y_buffer[i];
       t_sum += t_buffer[i];
+
+      console.log(t_buffer[i] + ", " + y_buffer[i]);
     }
 
     var y_mean = y_sum / bufferSize;
@@ -141,14 +142,15 @@ function VelocityCalculator(bufferSize) {
     var sum_tt = 0;
 
     for (var i = 0; i < bufferSize; ++i) {
-      sum_yt += (y_buffer[i] - y_mean) * (t_buffer[i] - t_mean);
-      sum_tt += (t_buffer[i] - t_mean) * (t_buffer[i] - t_mean);
+      var t_i = (t_buffer[i] - t_mean);
+      sum_yt += (y_buffer[i] - y_mean) * t_i;
+      sum_tt += t_i * t_i;
     }
 
+    console.log(sum_yt / sum_tt);
     return sum_yt / sum_tt;
   }
 
-  // TODO - fix this! It broke when I switched to a circular buffer.
   this.getLastDeltas = function() {
     var y1 = y_buffer[(index - 3) % bufferSize];
     var y2 = y_buffer[(index - 2) % bufferSize];
@@ -175,7 +177,6 @@ Polymer('polymer-p2r', {
     // expose for access via developer console.
     window.scroller = scroller;
     window.overscroll = overscroll;
-    window.FLING_VELOCITY_MULTIPLIER = 1;
     window.polymer_element = this;
 
     var velocityCalculator = new VelocityCalculator(5);
@@ -202,11 +203,16 @@ Polymer('polymer-p2r', {
       }
     }
 
-    var lastTime = 0;
-    function onAnimationFrame(time) {
+    var time = 0;
+    function onAnimationFrame() {
+      // Use a hard coded delta for now, as Euler integration behaves badly when
+      // given timestamps which vary as much as the RAF timestamps do.
+      // TODO: integrate better (RK4? Do more Euler integration steps, with a
+      // fixed timestep, and interpolate between them?)
+      time += TIMESTEP;
+
       // TODO - figure out if we can ever not schedule an update.
       requestAnimationFrame(onAnimationFrame);
-
       velocityCalculator.addValue(scroller.scrollTop, time);
 
       if (!overscroll.step(time) && overscroll.getOffset() == 0) {
@@ -313,7 +319,7 @@ Polymer('polymer-p2r', {
       }
 
       if (fingersDown == 0) {
-        var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
+        var vel = -velocityCalculator.getVelocity();
         overscroll.setTarget(0);
         overscroll.setVelocity(vel);
       }
