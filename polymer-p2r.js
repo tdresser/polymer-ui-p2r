@@ -319,7 +319,7 @@ Polymer('polymer-p2r', {
       }
 
       if (fingersDown == 0) {
-        var vel = -velocityCalculator.getVelocity();
+        var vel = -velocityCalculator.getVelocity() * 0.9;
         overscroll.setTarget(0);
         overscroll.setVelocity(vel);
       }
