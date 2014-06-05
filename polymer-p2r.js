@@ -87,7 +87,7 @@ function Overscroll(max_offset) {
     v -= dampening;
     d += v * delta;
 
-    if (target_pos - d > -1 && v <= 0) {
+    if (target_pos - d > -0.5 && v <= 0) {
       v = 0;
       d = target;
       target = null;
