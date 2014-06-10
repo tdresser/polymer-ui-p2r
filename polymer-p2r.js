@@ -163,8 +163,8 @@ function VelocityCalculator(bufferSize) {
 Polymer('polymer-p2r', {
   ready: function() {
     var self = this;
-    var scroller = self.$.scroller;
     var p2r = self.$.p2r;
+    var scroller = document.body;
     var scrollcontent = self.$.scrollcontent;
     var pullStartY = 0;
     var loadingOffset = 150;
@@ -325,7 +325,7 @@ Polymer('polymer-p2r', {
       }
     }
 
-    scroller.addEventListener('scroll', transitionIntoJavascriptScrollIfNecessary);
+    window.addEventListener('scroll', transitionIntoJavascriptScrollIfNecessary);
     scroller.addEventListener('touchcancel', finishPull);
     scroller.addEventListener('touchend', finishPull);
 

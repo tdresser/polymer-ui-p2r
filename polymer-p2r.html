@@ -3,43 +3,31 @@
 <polymer-element name="polymer-p2r">
   <template>
     <style>
+     :host {
+       display:block;
+       overflow:hidden;
+     }
+
      :host * {
        margin:0;
        padding:0;
      }
 
-     :host {
-       display:block;
-     }
-
-     :host #scroller {
-       height:100%;
-       width:100%;
-       display:block;
-       overflow-y:scroll;
-       -webkit-overflow-scrolling: touch;
-     }
-
      :host #scrollcontent {
        position: relative;
        width: 100%;
-       /* Offset p2r height. TODO: pull this from the header object */
-       top: -800px;
-       margin-bottom:-800px;
      }
 
      :host #p2r {
-       position: relative;
-       z-index:-1;
+       position: absolute;
+       width:100%;
      }
     </style>
-    <div id="scroller">
-      <div id="p2r">
-        <content select=".p2rheader"></content>
-      </div>
-      <div id="scrollcontent">
-        <content select=".content"></content>
-      </div>
+    <div id="p2r">
+      <content select=".p2rheader"></content>
+    </div>
+    <div id="scrollcontent">
+      <content select=".content"></content>
     </div>
   </template>
   <script src="polymer-p2r.js"></script>
