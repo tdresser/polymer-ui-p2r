@@ -273,6 +273,10 @@ Polymer('polymer-p2r', {
     });
 
     scroller.addEventListener('touchmove', function(e) {
+      if (!e.cancelable) {
+        return;
+      }
+
       if (isFirstTouchMove) {
         pullStartY = e.touches[0].clientY + scroller.scrollTop - overscroll.getOffset();
         isFirstTouchMove = false;
