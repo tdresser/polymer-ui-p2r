@@ -308,6 +308,7 @@ Polymer('polymer-p2r', {
         // transitionIntoJavascriptScrollIfNecessary.
         return;
       }
+      console.log("setOffset " + offset);
       overscroll.setOffset(offset);
     });
 
