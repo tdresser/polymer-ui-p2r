@@ -284,12 +284,12 @@ Polymer('polymer-p2r', {
       if (isFirstTouchMove) {
         pullStartY = e.touches[0].clientY + scroller.scrollTop - overscroll.getOffset();
         isFirstTouchMove = false;
-//        if (isPulling()) {
+        if (isPulling()) {
           console.log("prevent first touchmove");
           e.preventDefault();
-//        } else {
-//          console.log("don't prevent first touchmove");
-//        }
+        } else {
+          console.log("don't prevent first touchmove");
+        }
         return;
       }
 
@@ -303,7 +303,10 @@ Polymer('polymer-p2r', {
       }
 
       if (offset > 0) {
+        console.log("preventDefault (offset > 0)");
         e.preventDefault();
+      } else {
+        console.log("don't preventDefault (offset <= 0)");
       }
 
       if (scroller.scrollTop == 0 &&
