@@ -164,7 +164,10 @@ Polymer('polymer-p2r', {
   ready: function() {
     var self = this;
     var p2r = self.$.p2r;
-    var scroller = document.body;
+// Switch for document scrolling.
+//    var scroller = document.body;
+    var scroller = self.$.scroller;
+
     var scrollcontent = self.$.scrollcontent;
     var pullStartY = 0;
     var loadingOffset = 150;
@@ -340,7 +343,9 @@ Polymer('polymer-p2r', {
       }
     }
 
-    window.addEventListener('scroll', transitionIntoJavascriptScrollIfNecessary);
+// Switch for document scrolling
+    scroller.addEventListener('scroll', transitionIntoJavascriptScrollIfNecessary);
+//    window.addEventListener('scroll', transitionIntoJavascriptScrollIfNecessary);
     scroller.addEventListener('touchcancel', finishPull);
     scroller.addEventListener('touchend', finishPull);
 
