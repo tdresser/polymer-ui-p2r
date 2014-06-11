@@ -286,7 +286,10 @@ Polymer('polymer-p2r', {
         console.log("pullStartY (first) " + pullStartY);
         isFirstTouchMove = false;
         if (isPulling()) {
+          console.log("prevent first touchmove");
           e.preventDefault();
+        } else {
+          console.log("don't prevent first touchmove");
         }
         return;
       }
