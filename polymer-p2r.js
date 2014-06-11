@@ -277,6 +277,7 @@ Polymer('polymer-p2r', {
 
     scroller.addEventListener('touchmove', function(e) {
       if (!e.cancelable) {
+        console.log("UNCANCELABLE MOVE!");
         return;
       }
 
