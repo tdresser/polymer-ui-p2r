@@ -277,6 +277,8 @@ Polymer('polymer-p2r', {
         return;
       }
 
+      console.log("touchmove " + e.touches[0].clientY);
+
       if (isFirstTouchMove) {
         pullStartY = e.touches[0].clientY + scroller.scrollTop - overscroll.getOffset();
         isFirstTouchMove = false;
