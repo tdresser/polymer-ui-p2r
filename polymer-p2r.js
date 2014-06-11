@@ -226,7 +226,7 @@ Polymer('polymer-p2r', {
         scroller.scrollTop = -overscroll.getOffset();
         overscroll.setOffset(0);
       } else if (scroller.scrollTop !== 0 && overscroll.getOffset() > 0) {
-        console.log("Repair offset required ");
+//        console.log("Repair offset required ");
       }
 
       var offset = overscroll.addFriction(overscroll.getOffset());
