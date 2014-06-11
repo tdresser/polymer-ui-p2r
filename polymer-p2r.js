@@ -278,9 +278,12 @@ Polymer('polymer-p2r', {
       }
 
       console.log("touchmove " + e.touches[0].clientY);
+      console.log("scrollTop " + scroller.scrollTop);
+      console.log("overscroll offset " + overscroll.getOffset());
 
       if (isFirstTouchMove) {
         pullStartY = e.touches[0].clientY + scroller.scrollTop - overscroll.getOffset();
+        console.log("pullStartY (first) " + pullStartY);
         isFirstTouchMove = false;
         if (isPulling()) {
           e.preventDefault();
@@ -294,6 +297,7 @@ Polymer('polymer-p2r', {
         // TODO: this is an ugly hack, to deal with the way that the scroll
         // offset gets out of sync with |offset|.
         pullStartY = e.touches[0].clientY + scroller.scrollTop - overscroll.getOffset();
+        console.log("pullStartY " + pullStartY);
         return;
       }
 
