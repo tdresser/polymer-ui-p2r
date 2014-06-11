@@ -5,8 +5,6 @@
     <style>
      :host {
        display:block;
-       overflow:hidden;
-       height:100%;
      }
 
      :host * {
@@ -25,13 +23,15 @@
 
 
      :host #scrollcontent {
-       position: absolute;
+       position: relative;
        width: 100%;
+       top: -800px;
+       margin-bottom:-800px;
      }
 
      :host #p2r {
-       position: absolute;
-       width:100%;
+       position: relative;
+       z-index:-1;
      }
     </style>
 <!-- Remove "scroller" for document scrolling -->
