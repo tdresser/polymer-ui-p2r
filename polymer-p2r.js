@@ -289,7 +289,6 @@ Polymer('polymer-p2r', {
           console.log("prevent first touchmove");
           e.preventDefault();
         } else {
-          e.preventDefault();
           console.log("don't prevent first touchmove");
         }
         return;
