@@ -6,6 +6,7 @@
      :host {
        display:block;
        overflow:hidden;
+       height:100%;
      }
 
      :host * {
@@ -13,8 +14,18 @@
        padding:0;
      }
 
+/* Remove for document scrolling */
+     :host #scroller {
+       height:100%;
+       width:100%;
+       display:block;
+       overflow-y:scroll;
+       -webkit-overflow-scrolling: touch;
+     }
+
+
      :host #scrollcontent {
-       position: relative;
+       position: absolute;
        width: 100%;
      }
 
