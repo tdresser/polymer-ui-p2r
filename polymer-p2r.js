@@ -298,6 +298,7 @@ Polymer('polymer-p2r', {
       }
 
       var offset = e.touches[0].clientY - pullStartY;
+      console.log("OFFSET IS " + offset);
 
       if(!isPulling() && offset <= 0) {
         console.log("RESET PULL_START_Y");
