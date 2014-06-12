@@ -226,7 +226,7 @@ Polymer('polymer-p2r', {
         scroller.scrollTop = -overscroll.getOffset();
         overscroll.setOffset(0);
       } else if (scroller.scrollTop !== 0 && overscroll.getOffset() > 0) {
-//        console.log("Repair offset required ");
+        console.log("Repair offset required ");
       }
 
       var offset = overscroll.addFriction(overscroll.getOffset());
@@ -278,12 +278,6 @@ Polymer('polymer-p2r', {
     scroller.addEventListener('touchmove', function(e) {
       if (!e.cancelable) {
         console.log("UNCANCELABLE MOVE!");
-        if(!isPulling() && offset <= 0) {
-          var offset = e.touches[0].clientY - pullStartY;
-          // TODO: this is an ugly hack, to deal with the way that the scroll
-          // offset gets out of sync with |offset|.
-          pullStartY = e.touches[0].clientY + scroller.scrollTop - overscroll.getOffset();
-        }
         return;
       }
 
