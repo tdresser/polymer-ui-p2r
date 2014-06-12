@@ -300,7 +300,7 @@ Polymer('polymer-p2r', {
       var offset = e.touches[0].clientY - pullStartY;
       console.log("OFFSET IS " + offset);
 
-      if(!isPulling() && offset <= 0) {
+      if(!isPulling()) {
         console.log("RESET PULL_START_Y");
         // TODO: this is an ugly hack, to deal with the way that the scroll
         // offset gets out of sync with |offset|.
