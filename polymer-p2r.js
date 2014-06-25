@@ -1,13 +1,15 @@
 // TODO: remove the one frame stutter when flinging in.
-// TODO: don't allow flinging past the bottom of the page when the header is up.
+// TODO: don't redraw so much.
 
-function Overscroll() {
-  this.MAX_OFFSET = 800;
+// Using a constant timestep for now.
+var TIMESTEP = 16;
 
+function Overscroll(max_offset) {
   // Constants to configure spring physics
   this.SPRING_CONSTANT = 0.0003;
   this.DAMPING = 0.5;
   this.SPRING_LERP_POW = 4;
+  this.FRICTION = 0.95;
 
   var self = this;
   var d = 0;
@@ -41,11 +43,8 @@ function Overscroll() {
       return delta;
     }
 
-    delta = delta/this.MAX_OFFSET;
-    if (delta > 1) {
-      delta = 1;
-    }
-    return this.MAX_OFFSET * (delta/2 - delta/2 * delta/2);
+    delta = delta / max_offset;
+    return max_offset * delta / (1 + delta);
   }
 
   this.reachedTarget = function() {
@@ -54,26 +53,23 @@ function Overscroll() {
 
   this.step = function(time) {
     if (target === null && v === 0) {
-      return;
+      return false;
     }
 
-    var target_pos = target === null ? 0 : target;
+    var current_distance = d;
 
+    var target_pos = target === null ? 0 : target;
     var delta = time - prev_time;
+
     // If we don't have information on elapsed time, assume it's been 30 ms
     // since the last update.
     if (prev_time === 0) {
-      delta = 30;
+      delta = TIMESTEP;
     }
 
     prev_time = time;
     if (fling_time !== null) {
       fling_time += delta;
-    }
-
-    if (d > this.MAX_OFFSET) {
-      d = this.MAX_OFFSET;
-      v = 0;
     }
 
     var lerp = 1;
@@ -83,6 +79,7 @@ function Overscroll() {
 
     var a = Math.pow(lerp, this.SPRING_LERP_POW) *
         (this.SPRING_CONSTANT * (target - d));
+    v *= this.FRICTION;
     v += a * delta;
     // Using the velocity after applying the acceleration due to the spring
     // keeps the simulation more stable.
@@ -90,12 +87,14 @@ function Overscroll() {
     v -= dampening;
     d += v * delta;
 
-    if (target_pos - d > -1 && v <= 0) {
+    if (target_pos - d > -0.1 && v <= 0) {
       v = 0;
       d = target;
       target = null;
       prev_time = 0;
     }
+
+    return d !== current_distance;
   }
 
   this.setOffset = function(o) {
@@ -104,7 +103,6 @@ function Overscroll() {
     target = null;
     d = o;
     v = 0;
-    this.step(0);
   }
 
   this.getOffset = function() {
@@ -114,27 +112,27 @@ function Overscroll() {
 
 // Performs an ordinary least squares regression.
 function VelocityCalculator(bufferSize) {
-  var y_buffer = [];
-  var t_buffer = [];
+  var y_buffer = new Array(bufferSize);
+  var t_buffer = new Array(bufferSize);
+  var index = 0;
 
-  var y_sum = 0;
-  var t_sum = 0;
-
+  // We do this frequently, so keep it light. Delay as much computation as
+  // possible until |getVelocity| is called.
   this.addValue = function(y, t) {
-    y_buffer.push(y);
-    y_sum += y;
-    t_buffer.push(t);
-    t_sum += t;
-
-    if (y_buffer.length > bufferSize) {
-      y_sum -= y_buffer.shift();
-      t_sum -= t_buffer.shift();
-    }
+    y_buffer[index] = y;
+    t_buffer[index] = t;
+    index = (index + 1) % bufferSize;
   }
 
   this.getVelocity = function() {
-    if (y_buffer.length < bufferSize) {
-      return 0;
+    var y_sum = 0;
+    var t_sum = 0;
+
+    for (var i = 0; i < bufferSize; ++i) {
+      y_sum += y_buffer[i];
+      t_sum += t_buffer[i];
+
+      console.log(t_buffer[i] + ", " + y_buffer[i]);
     }
 
     var y_mean = y_sum / bufferSize;
@@ -144,11 +142,20 @@ function VelocityCalculator(bufferSize) {
     var sum_tt = 0;
 
     for (var i = 0; i < bufferSize; ++i) {
-      sum_yt += (y_buffer[i] - y_mean) * (t_buffer[i] - t_mean);
-      sum_tt += (t_buffer[i] - t_mean) * (t_buffer[i] - t_mean);
+      var t_i = (t_buffer[i] - t_mean);
+      sum_yt += (y_buffer[i] - y_mean) * t_i;
+      sum_tt += t_i * t_i;
     }
 
+    console.log(sum_yt / sum_tt);
     return sum_yt / sum_tt;
+  }
+
+  this.getLastDeltas = function() {
+    var y1 = y_buffer[(index - 3) % bufferSize];
+    var y2 = y_buffer[(index - 2) % bufferSize];
+    var y3 = y_buffer[(index - 1) % bufferSize];
+    return [y2 - y1, y3 - y2];
   }
 }
 
@@ -156,24 +163,28 @@ function VelocityCalculator(bufferSize) {
 Polymer('polymer-p2r', {
   ready: function() {
     var self = this;
-    var scroller = self.$.scroller;
     var p2r = self.$.p2r;
+// Switch for document scrolling.
+//    var scroller = document.body;
+    var scroller = self.$.scroller;
+
     var scrollcontent = self.$.scrollcontent;
-    var framePending = false;
     var pullStartY = 0;
-    var lastY = 0;
     var loadingOffset = 150;
     var fingersDown = 0;
-    var overscroll = new Overscroll();
+
+    var overscroll = new Overscroll(window.innerHeight);
+    var isFirstTouchMove = false;
+    var frame = 0;
 
     // expose for access via developer console.
+    window.scroller = scroller;
     window.overscroll = overscroll;
-    window.FLING_VELOCITY_MULTIPLIER = 1;
+    window.polymer_element = this;
 
-    var absorbNextTouchMove = false;
-    var velocityCalculator = new VelocityCalculator(3);
+    var velocityCalculator = new VelocityCalculator(5);
 
-    function getHeaderClassName(name) {
+    function getHeaderClassName() {
       return self.className;
     }
 
@@ -186,33 +197,45 @@ Polymer('polymer-p2r', {
     }
 
     function checkPulled() {
+      if (fingersDown === 0) {
+        return;
+      }
       var triggerOffset = 60;
       if (getHeaderClassName() != 'loading') {
         setHeaderClassName(overscroll.getOffset() > triggerOffset ? 'pulled' : '');
       }
     }
 
-    function onAnimationFrame(time) {
-      framePending = false;
-      checkPulled();
-      overscroll.step(time);
+    var time = 0;
+    function onAnimationFrame() {
+      // Use a hard coded delta for now, as Euler integration behaves badly when
+      // given timestamps which vary as much as the RAF timestamps do.
+      // TODO: integrate better (RK4? Do more Euler integration steps, with a
+      // fixed timestep, and interpolate between them?)
+      time += TIMESTEP;
 
-      if (overscroll.getOffset() <= 0) {
+      // TODO - figure out if we can ever not schedule an update.
+      requestAnimationFrame(onAnimationFrame);
+      velocityCalculator.addValue(scroller.scrollTop, time);
+
+      if (!overscroll.step(time) && overscroll.getOffset() == 0) {
+        return;
+      }
+
+      if (overscroll.getOffset() < 0) {
         scroller.scrollTop = -overscroll.getOffset();
         overscroll.setOffset(0);
+      } else if (scroller.scrollTop !== 0 && overscroll.getOffset() > 0) {
+        console.log("Repair offset required ");
       }
-      translateY(scrollcontent, overscroll.addFriction(overscroll.getOffset()));
-      translateY(p2r, overscroll.addFriction(overscroll.getOffset()) - p2r.clientHeight);
-      if (!overscroll.reachedTarget()) {
-        scheduleUpdate();
-      }
-    }
 
-    function scheduleUpdate() {
-      if (!framePending) {
-        framePending = true;
-        requestAnimationFrame(onAnimationFrame);
-      }
+      var offset = overscroll.addFriction(overscroll.getOffset());
+      var clientHeight = p2r.clientHeight;
+
+      checkPulled();
+      translateY(scrollcontent, offset);
+      translateY(p2r, offset - clientHeight);
+      frame++;
     }
 
     function isP2rVisible() {
@@ -220,7 +243,7 @@ Polymer('polymer-p2r', {
     }
 
     function isPulling() {
-      return overscroll.getOffset() > 0.2;
+      return overscroll.getOffset() > 0;
     }
 
     function finishPull(e) {
@@ -237,95 +260,101 @@ Polymer('polymer-p2r', {
       } else {
         overscroll.setTarget(Math.max(0, scroller.scrollTop));
       }
-      scheduleUpdate();
     }
 
     function finishLoading() {
       setHeaderClassName('');
       if (isP2rVisible() && fingersDown == 0) {
         overscroll.setTarget(Math.max(0, scroller.scrollTop));
-        scheduleUpdate();
       }
     }
 
     scroller.addEventListener('touchstart', function(e) {
-      lastY = e.touches[0].screenY + scroller.scrollTop;
-      pullStartY = lastY;
       fingersDown++;
-
-      if (isPulling()) {
-        absorbNextTouchMove = true;
-      }
+      isFirstTouchMove = true;
+      overscroll.setOffset(overscroll.getOffset());
     });
 
     scroller.addEventListener('touchmove', function(e) {
-      if (absorbNextTouchMove) {
-        pullStartY = e.touches[0].screenY - overscroll.getOffset();
-        absorbNextTouchMove = false;
-        e.preventDefault();
+/*      if (!e.cancelable) {
+        console.log("UNCANCELABLE MOVE!");
+        return;
+      }*/
+
+      console.log("touchmove " + e.touches[0].clientY);
+      console.log("scrollTop " + scroller.scrollTop);
+      console.log("overscroll offset " + overscroll.getOffset());
+
+      if (isFirstTouchMove) {
+        pullStartY = e.touches[0].clientY + scroller.scrollTop - overscroll.getOffset();
+        isFirstTouchMove = false;
+        if (isPulling()) {
+          console.log("prevent first touchmove");
+          e.preventDefault();
+        } else {
+          console.log("don't prevent first touchmove");
+        }
         return;
       }
 
-      var scrollDelta = lastY - e.touches[0].screenY;
-      var startingNewPull = !isPulling() && scroller.scrollTop <= 0 && scrollDelta < 0;
-      lastY = e.touches[0].screenY;
+      var offset = e.touches[0].clientY - pullStartY;
+      console.log("OFFSET IS " + offset);
 
-      var offset = e.touches[0].screenY - pullStartY;
-
-      if(!startingNewPull && !isPulling()) {
+      if(!isPulling() && offset <= 0) {
+        console.log("RESET PULL_START_Y");
+        // TODO: this is an ugly hack, to deal with the way that the scroll
+        // offset gets out of sync with |offset|.
+        pullStartY = e.touches[0].clientY + scroller.scrollTop - overscroll.getOffset();
         return;
       }
 
       if (offset > 0) {
+        console.log("preventDefault (offset > 0)");
         e.preventDefault();
+      } else {
+        console.log("don't preventDefault (offset <= 0)");
       }
 
-      isFirstTouchMove = false;
-
+      if (scroller.scrollTop == 0 &&
+          overscroll.getOffset() == 0 &&
+          velocityCalculator.getLastDeltas()[1] !== 0) {
+        // We may have a truncated delta, which will be handled in
+        // transitionIntoJavascriptScrollIfNecessary.
+        return;
+      }
+      console.log("setOffset " + offset);
       overscroll.setOffset(offset);
-      scheduleUpdate();
     });
 
-//    var prevScrollTop = 0;
-
-    function onScrollEvent(e) {
-      if(isPulling()) {
+    function transitionIntoJavascriptScrollIfNecessary() {
+      if(isPulling() || scroller.scrollTop > 0) {
         return;
       }
 
-      velocityCalculator.addValue(scroller.scrollTop, window.performance.now());
-      var vel = -velocityCalculator.getVelocity() * window.FLING_VELOCITY_MULTIPLIER;
-//      console.log(scroller.scrollTop);
-      // We want to tell if the next frame will fling into the overscroll
-      // region. Overestimate the next frame time, and use that to guess if
-      // we'll hit the overscroll region next frame.
-//      var next_delta_estimate = 300 * vel;
-//      console.log("this delta was " + (prevScrollTop - scroller.scrollTop));
-//      prevScrollTop = scroller.scrollTop;
-//
-//      console.log("next delta " + next_delta_estimate);
-//      console.log("scroll top " + scroller.scrollTop);
-//
-//      if (scroller.scrollTop > next_delta_estimate) {
-//        console.log("Abort fling");
-//        return;
-//      }
-//
+      var lastDeltas = velocityCalculator.getLastDeltas();
+      var truncatedScrollDelta = lastDeltas[1] - lastDeltas[0];
 
-      if (scroller.scrollTop > 0) {
-        return;
+      if(Math.abs(lastDeltas[0]) > Math.abs(lastDeltas[1])) {
+        // Looks like truncation occurred.
+        overscroll.setOffset(overscroll.getOffset() + truncatedScrollDelta);
       }
 
       if (fingersDown == 0) {
-        console.log("FLING " + vel)
+        var vel = -velocityCalculator.getVelocity() * 0.9;
         overscroll.setTarget(0);
         overscroll.setVelocity(vel);
-        scheduleUpdate();
       }
     }
 
-    scroller.addEventListener('scroll', onScrollEvent);
+// Switch for document scrolling
+    scroller.addEventListener('scroll', transitionIntoJavascriptScrollIfNecessary);
+//    window.addEventListener('scroll', transitionIntoJavascriptScrollIfNecessary);
     scroller.addEventListener('touchcancel', finishPull);
     scroller.addEventListener('touchend', finishPull);
+
+    document.addEventListener('scroll', function() {
+      // Make 100% sure chrome knows we have a scroll listener.
+    });
+    requestAnimationFrame(onAnimationFrame);
   }
 });

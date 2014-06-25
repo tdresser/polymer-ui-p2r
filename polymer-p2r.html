@@ -3,26 +3,28 @@
 <polymer-element name="polymer-p2r">
   <template>
     <style>
+     :host {
+       display:block;
+     }
+
      :host * {
        margin:0;
        padding:0;
      }
 
-     :host {
-       display:block;
-     }
-
+/* Remove for document scrolling */
      :host #scroller {
        height:100%;
        width:100%;
        display:block;
        overflow-y:scroll;
+       -webkit-overflow-scrolling: touch;
      }
+
 
      :host #scrollcontent {
        position: relative;
        width: 100%;
-       /* Offset p2r height. TODO: pull this from the header object */
        top: -800px;
        margin-bottom:-800px;
      }
@@ -32,6 +34,7 @@
        z-index:-1;
      }
     </style>
+<!-- Remove "scroller" for document scrolling -->
     <div id="scroller">
       <div id="p2r">
         <content select=".p2rheader"></content>
