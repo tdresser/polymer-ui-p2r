@@ -13,13 +13,13 @@
      }
 
 /* Remove for document scrolling */
-     :host #scroller {
+/*     :host #scroller {
        height:100%;
        width:100%;
        display:block;
        overflow-y:scroll;
        -webkit-overflow-scrolling: touch;
-     }
+     }*/
 
 
      :host #scrollcontent {
@@ -35,14 +35,14 @@
      }
     </style>
 <!-- Remove "scroller" for document scrolling -->
-    <div id="scroller">
+<!--    <div id="scroller">-->
       <div id="p2r">
         <content select=".p2rheader"></content>
       </div>
       <div id="scrollcontent">
         <content select=".content"></content>
       </div>
-    </div>
+<!--    </div>-->
   </template>
   <script src="polymer-p2r.js"></script>
 </polymer-element>
