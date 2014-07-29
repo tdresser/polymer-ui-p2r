@@ -5,7 +5,7 @@
 var TIMESTEP = 16;
 
 function log(str) {
-  console.log(str);
+//  console.log(str);
 }
 
 function Overscroll(max_offset) {
