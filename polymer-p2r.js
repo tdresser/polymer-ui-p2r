@@ -4,6 +4,10 @@
 // Using a constant timestep for now.
 var TIMESTEP = 16;
 
+function log(str) {
+  console.log(str);
+}
+
 function Overscroll(max_offset) {
   // Constants to configure spring physics
   this.SPRING_CONSTANT = 0.0003;
@@ -132,7 +136,7 @@ function VelocityCalculator(bufferSize) {
       y_sum += y_buffer[i];
       t_sum += t_buffer[i];
 
-      console.log(t_buffer[i] + ", " + y_buffer[i]);
+      log(t_buffer[i] + ", " + y_buffer[i]);
     }
 
     var y_mean = y_sum / bufferSize;
@@ -147,7 +151,7 @@ function VelocityCalculator(bufferSize) {
       sum_tt += t_i * t_i;
     }
 
-    console.log(sum_yt / sum_tt);
+    log(sum_yt / sum_tt);
     return sum_yt / sum_tt;
   }
 
@@ -226,7 +230,7 @@ Polymer('polymer-p2r', {
         scroller.scrollTop = -overscroll.getOffset();
         overscroll.setOffset(0);
       } else if (scroller.scrollTop !== 0 && overscroll.getOffset() > 0) {
-        console.log("Repair offset required ");
+        log("Repair offset required ");
       }
 
       var offset = overscroll.addFriction(overscroll.getOffset());
@@ -276,32 +280,32 @@ Polymer('polymer-p2r', {
     });
 
     scroller.addEventListener('touchmove', function(e) {
-/*      if (!e.cancelable) {
-        console.log("UNCANCELABLE MOVE!");
+      if (!e.cancelable) {
+        log("UNCANCELABLE MOVE!");
         return;
-      }*/
+      }
 
-      console.log("touchmove " + e.touches[0].clientY);
-      console.log("scrollTop " + scroller.scrollTop);
-      console.log("overscroll offset " + overscroll.getOffset());
+      log("touchmove " + e.touches[0].clientY);
+      log("scrollTop " + scroller.scrollTop);
+      log("overscroll offset " + overscroll.getOffset());
 
       if (isFirstTouchMove) {
         pullStartY = e.touches[0].clientY + scroller.scrollTop - overscroll.getOffset();
         isFirstTouchMove = false;
         if (isPulling()) {
-          console.log("prevent first touchmove");
+          log("prevent first touchmove");
           e.preventDefault();
         } else {
-          console.log("don't prevent first touchmove");
+          log("don't prevent first touchmove");
         }
         return;
       }
 
       var offset = e.touches[0].clientY - pullStartY;
-      console.log("OFFSET IS " + offset);
+      log("OFFSET IS " + offset);
 
       if(!isPulling() && offset <= 0) {
-        console.log("RESET PULL_START_Y");
+        log("RESET PULL_START_Y");
         // TODO: this is an ugly hack, to deal with the way that the scroll
         // offset gets out of sync with |offset|.
         pullStartY = e.touches[0].clientY + scroller.scrollTop - overscroll.getOffset();
@@ -309,10 +313,10 @@ Polymer('polymer-p2r', {
       }
 
       if (offset > 0) {
-        console.log("preventDefault (offset > 0)");
+        log("preventDefault (offset > 0)");
         e.preventDefault();
       } else {
-        console.log("don't preventDefault (offset <= 0)");
+        log("don't preventDefault (offset <= 0)");
       }
 
       if (scroller.scrollTop == 0 &&
@@ -322,7 +326,7 @@ Polymer('polymer-p2r', {
         // transitionIntoJavascriptScrollIfNecessary.
         return;
       }
-      console.log("setOffset " + offset);
+      log("setOffset " + offset);
       overscroll.setOffset(offset);
     });
 
